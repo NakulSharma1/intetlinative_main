@@ -374,11 +374,8 @@ export default function PageHero({
       />
 
       <div
-        className="relative mx-auto"
+        className="relative px-6 md:px-12"
         style={{
-          maxWidth: '1200px',
-          paddingLeft: '48px',
-          paddingRight: '48px',
           display: 'flex',
           alignItems: 'center',
           gap: '40px',

@@ -227,8 +227,8 @@ export default function TrustBar() {
     <>
       {/* ── 1. COMPLIANCE MARQUEE STRIP ── */}
       <div
-        className="relative w-full overflow-hidden border-t border-b border-[rgba(255,255,255,0.05)]"
-        style={{ background: 'rgba(255,255,255,0.015)' }}
+        className="relative w-full overflow-hidden border-t border-b border-[color:var(--glass-border)]"
+        style={{ background: 'var(--bg-secondary)' }}
       >
         <div
           className="flex whitespace-nowrap py-5"
@@ -241,17 +241,17 @@ export default function TrustBar() {
             return (
               <div
                 key={i}
-                className="inline-flex items-center gap-2.5 px-5 py-2 mx-3 rounded-full border border-[rgba(255,255,255,0.08)] cursor-default select-none transition-all"
+                className="inline-flex items-center gap-2.5 px-5 py-2 mx-3 rounded-full border border-[color:var(--glass-border)] cursor-default select-none transition-all"
                 style={{
-                  background: 'rgba(255,255,255,0.03)',
+                  background: 'var(--glass-bg)',
                 }}
                 onMouseEnter={e => {
                   (e.currentTarget as HTMLElement).style.background = 'rgba(0,212,255,0.07)';
                   (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,212,255,0.25)';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)';
+                  (e.currentTarget as HTMLElement).style.background = 'var(--glass-bg)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--glass-border)';
                 }}
               >
                 <Icon />
@@ -275,7 +275,7 @@ export default function TrustBar() {
       </div>
 
       {/* ── 2. ENTERPRISE TRUST SECTION ── */}
-      <section className="relative py-20 overflow-hidden" style={{ background: '#050810' }}>
+      <section className="relative py-20 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
         {/* Ambient background glow */}
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full pointer-events-none"
@@ -285,7 +285,7 @@ export default function TrustBar() {
           }}
         />
 
-        <div className="relative max-w-[1200px] mx-auto px-6 md:px-12">
+        <div className="relative px-6 md:px-12">
           {/* Section header */}
           <div className="text-center mb-12">
             <div
@@ -299,7 +299,7 @@ export default function TrustBar() {
               Enterprise Grade
             </div>
             <h2
-              className="text-4xl md:text-5xl font-bold text-[#F0F4FF]"
+              className="text-4xl md:text-5xl font-bold text-[color:var(--text-primary)]"
               style={{ fontFamily: 'var(--font-display)' }}
             >
               Trusted.&nbsp;
@@ -329,8 +329,8 @@ export default function TrustBar() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.45, delay: i * 0.07 }}
-                    className="relative group p-5 rounded-2xl border border-[rgba(255,255,255,0.06)] cursor-default transition-all duration-300"
-                    style={{ background: 'rgba(255,255,255,0.025)' }}
+                    className="relative group p-5 rounded-2xl border border-[color:var(--glass-border)] cursor-default transition-all duration-300"
+                    style={{ background: 'var(--bg-secondary)' }}
                     onMouseEnter={e => {
                       const el = e.currentTarget as HTMLElement;
                       el.style.borderColor = `${card.color}44`;
@@ -339,8 +339,8 @@ export default function TrustBar() {
                     }}
                     onMouseLeave={e => {
                       const el = e.currentTarget as HTMLElement;
-                      el.style.borderColor = 'rgba(255,255,255,0.06)';
-                      el.style.background = 'rgba(255,255,255,0.025)';
+                      el.style.borderColor = 'var(--glass-border)';
+                      el.style.background = 'var(--bg-secondary)';
                       el.style.boxShadow = 'none';
                     }}
                   >
@@ -348,12 +348,12 @@ export default function TrustBar() {
                       <card.icon />
                     </div>
                     <p
-                      className="text-sm font-semibold text-[#F0F4FF] mb-1"
+                      className="text-sm font-semibold text-[color:var(--text-primary)] mb-1"
                       style={{ fontFamily: 'var(--font-display)' }}
                     >
                       {card.title}
                     </p>
-                    <p className="text-xs text-[#4A5568] leading-relaxed">{card.desc}</p>
+                    <p className="text-xs text-[color:var(--text-muted)] leading-relaxed">{card.desc}</p>
                   </motion.div>
                 ))}
               </div>
@@ -363,8 +363,8 @@ export default function TrustBar() {
             <div className="w-full lg:w-[40%] flex flex-col gap-8">
               {/* Shield diagram */}
               <div
-                className="rounded-2xl border border-[rgba(255,255,255,0.06)] p-4 flex items-center justify-center"
-                style={{ background: 'rgba(255,255,255,0.02)', minHeight: '220px' }}
+                className="rounded-2xl border border-[color:var(--glass-border)] p-4 flex items-center justify-center"
+                style={{ background: 'var(--bg-secondary)', minHeight: '220px' }}
               >
                 <ShieldDiagram />
               </div>
@@ -389,12 +389,12 @@ export default function TrustBar() {
                     </div>
                     <div>
                       <p
-                        className="text-sm font-semibold text-[#F0F4FF] mb-1"
+                        className="text-sm font-semibold text-[color:var(--text-primary)] mb-1"
                         style={{ fontFamily: 'var(--font-display)' }}
                       >
                         {m.title}
                       </p>
-                      <p className="text-xs text-[#4A5568] leading-relaxed">{m.desc}</p>
+                      <p className="text-xs text-[color:var(--text-muted)] leading-relaxed">{m.desc}</p>
                     </div>
                   </motion.div>
                 ))}

@@ -175,6 +175,55 @@ function DataPipelineSVG({ color }: { color: string }) {
   );
 }
 
+function RedHatSVG({ color }: { color: string }) {
+  return (
+    <svg width="100" height="80" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ filter: `drop-shadow(0 0 8px ${color}88)` }}>
+      {/* Hat brim ellipse */}
+      <ellipse cx="50" cy="54" rx="36" ry="8" stroke={color} strokeWidth="1.5" fill="none" opacity="0.9" />
+      {/* Hat crown */}
+      <path d="M24 54 C26 36 34 24 50 24 C66 24 74 36 76 54"
+        stroke={color} strokeWidth="1.5" fill="none" opacity="0.9" />
+      {/* Hat band */}
+      <path d="M30 46 C34 42 42 40 50 40 C58 40 66 42 70 46"
+        stroke={color} strokeWidth="1" fill="none" opacity="0.55" />
+      {/* Shadow man face */}
+      <circle cx="50" cy="35" r="4.5" stroke={color} strokeWidth="1.2" fill="none" opacity="0.8" />
+      <circle cx="50" cy="35" r="1.8" fill={color} opacity="0.7" />
+      {/* Grid lines inside crown */}
+      <line x1="38" y1="52" x2="36" y2="36" stroke={color} strokeWidth="0.8" opacity="0.3" />
+      <line x1="62" y1="52" x2="64" y2="36" stroke={color} strokeWidth="0.8" opacity="0.3" />
+      <line x1="30" y1="47" x2="70" y2="47" stroke={color} strokeWidth="0.6" opacity="0.25" />
+    </svg>
+  );
+}
+
+function AWSSvg({ color }: { color: string }) {
+  return (
+    <svg width="110" height="80" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ filter: `drop-shadow(0 0 8px ${color}88)` }}>
+      {/* Cloud shape */}
+      <path d="M76 46 C81 46 86 42 86 37 C86 33 83 30 79 30 C78 25 73 21 67 21 C63 21 60 23 58 26 C56 23 52 21 48 21 C41 21 36 26 36 33 C33 34 31 37 31 40 C31 44 34 47 38 47 Z"
+        stroke={color} strokeWidth="1.5" fill="none" opacity="0.9" />
+      {/* AWS swoosh arrow */}
+      <path d="M18 60 C32 72 78 72 92 60"
+        stroke={color} strokeWidth="1.5" fill="none" opacity="0.65" strokeLinecap="round" />
+      <polyline points="85,56 92,60 85,64"
+        stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.65" />
+      {/* Service blocks */}
+      <rect x="43" y="31" width="9" height="9" rx="2" stroke={color} strokeWidth="1.2" fill="none" opacity="0.85" />
+      <rect x="58" y="31" width="9" height="9" rx="2" stroke={color} strokeWidth="1.2" fill="none" opacity="0.85" />
+      <line x1="52" y1="35.5" x2="58" y2="35.5" stroke={color} strokeWidth="0.9" opacity="0.55" />
+      {/* Centre dots */}
+      <circle cx="47.5" cy="35.5" r="1.8" fill={color} opacity="0.9" />
+      <circle cx="62.5" cy="35.5" r="1.8" fill={color} opacity="0.9" />
+      {/* Extra node bottom-centre */}
+      <rect x="50.5" y="47" width="9" height="7" rx="2" stroke={color} strokeWidth="1" fill="none" opacity="0.5" />
+      <line x1="55" y1="47" x2="55" y2="40" stroke={color} strokeWidth="0.8" opacity="0.35" />
+    </svg>
+  );
+}
+
 function IndustrialSVG({ color }: { color: string }) {
   return (
     <svg width="110" height="80" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -269,6 +318,24 @@ const services = [
     tall: false,
     Illustration: IndustrialSVG,
   },
+  {
+    id: 8,
+    title: 'Red Hat OpenShift',
+    tagline: 'Enterprise Kubernetes. Hybrid cloud ready.',
+    color: '#EE0000',
+    colSpan: 'md:col-span-6',
+    tall: false,
+    Illustration: RedHatSVG,
+  },
+  {
+    id: 9,
+    title: 'AWS Managed Services',
+    tagline: 'Fully managed cloud ops at scale.',
+    color: '#FF9900',
+    colSpan: 'md:col-span-6',
+    tall: false,
+    Illustration: AWSSvg,
+  },
 ];
 
 // ─── Card Component ────────────────────────────────────────────────────────────
@@ -356,6 +423,7 @@ export default function ServicesSection() {
   const row1 = services.slice(0, 2);
   const row2 = services.slice(2, 5);
   const row3 = services.slice(5, 7);
+  const row4 = services.slice(7, 9);
 
   return (
     <section id="services" className="relative pt-20 pb-10 overflow-hidden">
@@ -368,7 +436,7 @@ export default function ServicesSection() {
         }}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10">
+      <div className="px-6 md:px-12 relative z-10">
         {/* Header */}
         <motion.div
           className="text-center mb-16"
@@ -434,6 +502,13 @@ export default function ServicesSection() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
             {row3.map((svc, i) => (
               <ServiceCard key={svc.id} service={svc} index={i + 5} />
+            ))}
+          </div>
+
+          {/* Row 4 */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            {row4.map((svc, i) => (
+              <ServiceCard key={svc.id} service={svc} index={i + 7} />
             ))}
           </div>
         </div>

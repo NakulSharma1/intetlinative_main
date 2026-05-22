@@ -60,7 +60,7 @@ export default function Navigation() {
         />
 
         <div
-          className="max-w-[1400px] mx-auto px-6 md:px-12 flex items-center justify-between"
+          className="px-6 md:px-12 flex items-center justify-between"
           style={{ height: scrolled ? '60px' : '72px', transition: 'height 0.4s ease' }}
         >
           {/* ── Logo ── */}

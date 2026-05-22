@@ -35,8 +35,8 @@
   --glow-emerald: 0 0 40px rgba(0,255,136,0.25);
 
   /* Typography */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Figtree', system-ui, sans-serif;
+  --font-body: 'Figtree', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Spacing */

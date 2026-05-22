@@ -199,7 +199,7 @@ const stats = [
 /* ══════════════════════════════════════════════ */
 export default function StatsSection() {
   return (
-    <section className="relative py-20 overflow-hidden" style={{ background: '#050810' }}>
+    <section className="relative py-20 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
       {/* Subtle grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -226,49 +226,7 @@ export default function StatsSection() {
         }}
       />
 
-      <div className="relative max-w-[1200px] mx-auto px-6 md:px-12">
-
-        {/* ── STATS ROW ── */}
-        <div
-          className="relative rounded-3xl border border-[rgba(255,255,255,0.06)] mb-12 overflow-hidden"
-          style={{ background: 'rgba(255,255,255,0.02)' }}
-        >
-          {/* Glass sheen */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%)',
-            }}
-          />
-
-          <div className="relative grid grid-cols-2 md:grid-cols-4">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: i * 0.1 }}
-                className="relative flex flex-col items-center justify-center py-10 px-6 text-center"
-              >
-                {/* Vertical separator */}
-                {i < stats.length - 1 && (
-                  <div className="hidden md:block absolute right-0 top-1/4 h-1/2 w-[0.5px] bg-[rgba(255,255,255,0.07)]" />
-                )}
-
-                <CountUpAnimation end={stat.value} suffix={stat.suffix} />
-
-                <p
-                  className="mt-3 text-[11px] font-semibold tracking-[0.18em] uppercase text-[#4A5568]"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      <div className="relative px-6 md:px-12">
 
         {/* ── FEATURE CARDS ── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -279,8 +237,8 @@ export default function StatsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="group relative rounded-2xl border border-[rgba(255,255,255,0.06)] p-7 transition-all duration-300 cursor-default overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.025)' }}
+              className="group relative rounded-2xl border border-[color:var(--glass-border)] p-7 transition-all duration-300 cursor-default overflow-hidden"
+              style={{ background: 'var(--bg-secondary)' }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.borderColor = `${card.accentColor}44`;
@@ -289,8 +247,8 @@ export default function StatsSection() {
               }}
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = 'rgba(255,255,255,0.06)';
-                el.style.background = 'rgba(255,255,255,0.025)';
+                el.style.borderColor = 'var(--glass-border)';
+                el.style.background = 'var(--bg-secondary)';
                 el.style.boxShadow = 'none';
               }}
             >
@@ -318,12 +276,12 @@ export default function StatsSection() {
                 {/* Text */}
                 <div className="flex-1 min-w-0">
                   <h3
-                    className="text-base font-bold text-[#F0F4FF] mb-2"
+                    className="text-base font-bold text-[color:var(--text-primary)] mb-2"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
                     {card.title}
                   </h3>
-                  <p className="text-sm text-[#4A5568] leading-relaxed mb-4">{card.description}</p>
+                  <p className="text-sm text-[color:var(--text-muted)] leading-relaxed mb-4">{card.description}</p>
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2">

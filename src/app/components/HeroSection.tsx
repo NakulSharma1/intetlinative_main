@@ -308,12 +308,6 @@ const BADGE_COLORS: Record<string, string> = {
   'Secure by Design': '#7B2FFF', 'Enterprise Ready': '#00D4FF',
 };
 
-const LIVE_METRICS = [
-  { dot: '#00D4FF', label: 'Enterprises', value: '50+' },
-  { dot: '#00FF88', label: 'Uptime', value: '99.9%' },
-  { dot: '#7B2FFF', label: 'Faster Deploy', value: '3×' },
-];
-
 const PARTNERS = [
   { name: 'CNCF', color: '#00D4FF' },
   { name: 'AWS Partner', color: '#FF9D00' },
@@ -327,12 +321,6 @@ const TECH_TICKER = [
   'Grafana', 'Loki', 'Jaeger', 'Helm', 'Kyverno', 'FluxCD', 'Argo Rollouts',
 ];
 
-const HERO_STATS = [
-  { value: '500+', label: 'Projects Delivered' },
-  { value: '50+', label: 'Enterprise Clients' },
-  { value: '99.99%', label: 'Uptime SLA' },
-  { value: '<2min', label: 'Mean Incident Response' },
-];
 
 // ─── Floating Card ────────────────────────────────────────────────────────────
 
@@ -475,11 +463,21 @@ export default function HeroSection() {
           background: 'radial-gradient(ellipse 65% 65% at 26% 50%, rgba(123,47,255,0.09) 0%, rgba(0,212,255,0.04) 42%, transparent 70%)',
         }} />
 
-        {/* ── Main hero content (grows to fill, leaves room for stats + ticker) ── */}
-        <div className="relative z-10 flex flex-1 min-h-0" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        {/* NeuralCanvas — full-bleed background on desktop */}
+        <div className="hidden md:block absolute inset-0 z-[1] overflow-hidden" style={{ pointerEvents: 'none' }}>
+          <NeuralCanvas />
+        </div>
+        {/* Left-to-right gradient — keeps text readable over canvas */}
+        <div
+          className="hidden md:block absolute inset-0 z-[2] pointer-events-none"
+          style={{ background: 'linear-gradient(to right, var(--bg-primary) 40%, transparent 80%)' }}
+        />
+
+        {/* ── Main hero content ── */}
+        <div className="relative z-10 flex flex-1 min-h-0 flex-col md:flex-row" style={{ minHeight: 'calc(100vh - 120px)' }}>
 
           {/* LEFT */}
-          <div className="relative flex items-center w-1/2 pl-16 pr-10 py-24">
+          <div className="relative flex items-center w-full md:w-1/2 px-5 py-16 md:pl-16 md:pr-10 md:py-24">
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="max-w-[580px]">
 
               {/* Badge */}
@@ -580,24 +578,12 @@ export default function HeroSection() {
                 })}
               </motion.div>
 
-              {/* Live metrics */}
-              <motion.div variants={itemVariants} className="flex flex-wrap gap-3">
-                {LIVE_METRICS.map((metric) => {
-                  const rgb = metric.dot === '#00D4FF' ? '0,212,255' : metric.dot === '#00FF88' ? '0,255,136' : '123,47,255';
-                  return (
-                    <span key={metric.label} className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: 'rgba(128,128,128,0.06)', border: '1px solid rgba(128,128,128,0.12)', fontFamily: 'var(--font-body, Inter)' }}>
-                      <span style={{ display: 'inline-block', width: '7px', height: '7px', borderRadius: '50%', background: metric.dot, boxShadow: `0 0 6px 2px rgba(${rgb},0.55)`, animation: 'pulse 2s ease-in-out infinite', flexShrink: 0 }} />
-                      <span style={{ color: '#8A9BB5', fontSize: '0.75rem' }}>{metric.label}</span>
-                      <span style={{ color: 'var(--text-primary)', fontSize: '0.78rem', fontWeight: 700 }}>{metric.value}</span>
-                    </span>
-                  );
-                })}
-              </motion.div>
             </motion.div>
 
             {/* Scroll hint */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8, duration: 0.8 }}
-              style={{ position: 'absolute', bottom: '36px', left: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}
+              className="hidden md:flex"
+              style={{ position: 'absolute', bottom: '36px', left: '64px', flexDirection: 'column', alignItems: 'center', gap: '6px' }}
             >
               <span style={{ color: '#8A9BB5', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body, Inter)', opacity: 0.5 }}>Scroll to explore</span>
               <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }} style={{ opacity: 0.45, color: '#8A9BB5' }}>
@@ -608,16 +594,11 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* RIGHT — Canvas + Floating Cards */}
-          <div className="relative w-1/2 overflow-hidden">
-            {/* seam vignette */}
-            <div className="absolute inset-y-0 left-0 w-28 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, var(--bg-primary, #050810), transparent)' }} />
-
-            <NeuralCanvas />
-
+          {/* RIGHT — Floating Cards (hidden on mobile; canvas is absolute background) */}
+          <div className="hidden md:block relative md:w-1/2">
             <FloatingCard
               top="16%" right="6%" glow="#00D4FF" glowRgb="0,212,255" delay={0.9}
-              title="99.9% Uptime" subtitle="Platform SLA — 30 day avg"
+              title="Platform Status" subtitle="All systems operational"
               sparkData={[60, 75, 55, 85, 90, 80, 95, 88, 92, 96]}
               icon={<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5a5 5 0 100 10 5 5 0 000-10zM6.5 3.5v3.2l1.8 1.3" stroke="#00D4FF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>}
             />
@@ -631,48 +612,16 @@ export default function HeroSection() {
 
             <FloatingCard
               bottom="20%" left="5%" glow="#7B2FFF" glowRgb="123,47,255" delay={1.4}
-              title="47 Deployments Today" subtitle="+12% vs yesterday"
+              title="Deploy Pipeline" subtitle="Continuous delivery active"
               sparkData={[40, 55, 48, 62, 70, 65, 78, 72, 85, 90]}
               icon={<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 9.5l3-3 2 2 5-5" stroke="#7B2FFF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><path d="M8.5 3.5h3v3" stroke="#7B2FFF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>}
             />
           </div>
         </div>
 
-        {/* ── Stats ribbon ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.0 }}
-          className="relative z-10"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.18)', backdropFilter: 'blur(12px)' }}
-        >
-          <div className="max-w-[1200px] mx-auto px-16 py-5 flex items-center justify-between flex-wrap gap-4">
-            {HERO_STATS.map((stat, i) => (
-              <div key={i} className="flex items-center gap-3">
-                {i > 0 && <div style={{ width: '1px', height: '28px', background: 'rgba(255,255,255,0.07)', marginRight: '12px' }} />}
-                <div>
-                  <div style={{
-                    fontSize: '1.35rem', fontWeight: 800, lineHeight: 1,
-                    fontFamily: 'var(--font-display, Space Grotesk)',
-                    background: i % 2 === 0
-                      ? 'linear-gradient(135deg, #00D4FF 0%, #00FF88 100%)'
-                      : 'linear-gradient(135deg, #7B2FFF 0%, #00D4FF 100%)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                  }}>
-                    {stat.value}
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: '#4A5568', fontFamily: 'var(--font-body, Inter)', marginTop: '2px', letterSpacing: '0.02em' }}>
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
         {/* ── Tech ticker ── */}
         <div className="relative z-10 overflow-hidden" style={{
-          borderTop: '1px solid rgba(255,255,255,0.04)',
+          borderTop: '1px solid var(--glass-border)',
           background: 'rgba(0,0,0,0.25)',
           height: '38px', display: 'flex', alignItems: 'center',
         }}>

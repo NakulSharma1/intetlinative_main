@@ -365,7 +365,7 @@ export default function AboutSection() {
       id="about"
       ref={sectionRef}
       className="relative overflow-hidden"
-      style={{ background: '#050810' }}
+      style={{ background: 'var(--bg-primary)' }}
     >
       {/* Subtle grid texture */}
       <div
@@ -377,7 +377,7 @@ export default function AboutSection() {
         }}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
+      <div className="px-6 md:px-12">
         {/* ── Section Header ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

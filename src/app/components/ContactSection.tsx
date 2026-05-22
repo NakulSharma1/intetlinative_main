@@ -8,8 +8,8 @@ import { Copy, Check, Lock } from 'lucide-react';
 ───────────────────────────────────────── */
 const AuroraBg = () => (
   <>
-    {/* Base dark layer */}
-    <div className="absolute inset-0" style={{ background: '#050810' }} />
+    {/* Base layer */}
+    <div className="absolute inset-0" style={{ background: 'var(--bg-primary)' }} />
 
     {/* Violet orb — top left */}
     <div
@@ -95,16 +95,16 @@ const AuroraBg = () => (
 ───────────────────────────────────────── */
 const GradientDivider = () => (
   <div className="flex items-center justify-center gap-4 my-8">
-    <div className="h-[0.5px] w-20 bg-gradient-to-r from-transparent to-[rgba(255,255,255,0.12)]" />
-    <div className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.2)]" />
-    <div className="h-[0.5px] w-20 bg-gradient-to-l from-transparent to-[rgba(255,255,255,0.12)]" />
+    <div className="h-[0.5px] w-20 bg-gradient-to-r from-transparent to-[color:var(--glass-border-bright)]" />
+    <div className="w-1 h-1 rounded-full bg-[color:var(--glass-border-bright)]" />
+    <div className="h-[0.5px] w-20 bg-gradient-to-l from-transparent to-[color:var(--glass-border-bright)]" />
   </div>
 );
 
 /* ══════════════════════════════════════════════ */
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
-  const email = 'hello@intellinative.com';
+  const email = 'sales@intellinative.com';
 
   const handleCopy = async () => {
     try {
@@ -162,7 +162,7 @@ export default function ContactSection() {
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(38px, 6vw, 56px)',
-              color: '#F0F4FF',
+              color: 'var(--text-primary)',
             }}
           >
             Ready to engineer{' '}
@@ -180,7 +180,7 @@ export default function ContactSection() {
 
           {/* Sub-headline */}
           <p
-            className="text-lg md:text-xl text-[#8A9BB5] mb-12 max-w-[500px] mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-[color:var(--text-secondary)] mb-12 max-w-[500px] mx-auto leading-relaxed"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             Enterprise AI infrastructure built for modern scale.
@@ -221,22 +221,22 @@ export default function ContactSection() {
               <motion.div
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className="inline-flex items-center gap-2 px-9 py-4 rounded-full font-semibold text-[#F0F4FF] text-base border transition-all duration-300 cursor-pointer"
+                className="inline-flex items-center gap-2 px-9 py-4 rounded-full font-semibold text-[color:var(--text-primary)] text-base border transition-all duration-300 cursor-pointer"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  borderColor: 'rgba(255,255,255,0.15)',
+                  background: 'var(--glass-bg)',
+                  borderColor: 'var(--glass-border)',
                   fontFamily: 'var(--font-display)',
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = 'rgba(255,255,255,0.08)';
-                  el.style.borderColor = 'rgba(255,255,255,0.3)';
-                  el.style.boxShadow = '0 0 24px rgba(255,255,255,0.05)';
+                  el.style.background = 'var(--bg-tertiary)';
+                  el.style.borderColor = 'var(--glass-border-bright)';
+                  el.style.boxShadow = '0 0 24px rgba(0,0,0,0.08)';
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = 'rgba(255,255,255,0.04)';
-                  el.style.borderColor = 'rgba(255,255,255,0.15)';
+                  el.style.background = 'var(--glass-bg)';
+                  el.style.borderColor = 'var(--glass-border)';
                   el.style.boxShadow = 'none';
                 }}
               >
@@ -256,8 +256,8 @@ export default function ContactSection() {
             transition={{ duration: 0.5, delay: 0.25 }}
           >
             <div
-              className="px-6 py-3 rounded-full border border-[rgba(255,255,255,0.1)] flex items-center gap-3"
-              style={{ background: 'rgba(255,255,255,0.03)' }}
+              className="px-6 py-3 rounded-full border border-[color:var(--glass-border)] flex items-center gap-3"
+              style={{ background: 'var(--glass-bg)' }}
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <rect x="1" y="3" width="12" height="9" rx="2" stroke="#8A9BB5" strokeWidth="1.1"/>
@@ -275,8 +275,8 @@ export default function ContactSection() {
               onClick={handleCopy}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.93 }}
-              className="p-3 rounded-full border border-[rgba(255,255,255,0.1)] transition-all duration-200"
-              style={{ background: 'rgba(255,255,255,0.03)' }}
+              className="p-3 rounded-full border border-[color:var(--glass-border)] transition-all duration-200"
+              style={{ background: 'var(--glass-bg)' }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;
                 el.style.borderColor = 'rgba(0,212,255,0.4)';
@@ -284,8 +284,8 @@ export default function ContactSection() {
               }}
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = 'rgba(255,255,255,0.1)';
-                el.style.background = 'rgba(255,255,255,0.03)';
+                el.style.borderColor = 'var(--glass-border)';
+                el.style.background = 'var(--glass-bg)';
               }}
               aria-label="Copy email address"
             >
@@ -309,7 +309,7 @@ export default function ContactSection() {
           </motion.div>
 
           {/* Trust note */}
-          <div className="flex items-center justify-center gap-2 text-sm text-[#4A5568]">
+          <div className="flex items-center justify-center gap-2 text-sm text-[color:var(--text-muted)]">
             <Lock size={13} strokeWidth={2} />
             <span style={{ fontFamily: 'var(--font-display)' }}>
               Confidential. Replied within 24h.

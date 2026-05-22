@@ -17,8 +17,8 @@ function GlassIconButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[rgba(255,255,255,0.08)] hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
-      style={{ background: 'rgba(255,255,255,0.03)' }}
+      className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[color:var(--glass-border)] hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
+      style={{ background: 'var(--glass-bg)' }}
     >
       <span className="text-[#8A9BB5] group-hover:text-[#00D4FF] transition-colors duration-300">
         {children}
@@ -45,7 +45,7 @@ const capabilityLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#050810] text-[#F0F4FF]" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+    <footer className="relative text-[color:var(--text-primary)]" style={{ background: 'var(--bg-primary)', fontFamily: "'Space Grotesk', sans-serif" }}>
 
       {/* ── Top gradient accent line ── */}
       <div
@@ -68,7 +68,7 @@ export default function Footer() {
       />
 
       {/* ── Main grid ── */}
-      <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 pt-20 pb-12">
+      <div className="relative px-6 md:px-12 pt-20 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
 
           {/* ── Col 1: Brand (wider) ── */}
@@ -113,7 +113,7 @@ export default function Footer() {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-sm text-[#8A9BB5] hover:text-[#F0F4FF] transition-colors duration-200 group flex items-center gap-1"
+                    className="text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors duration-200 group flex items-center gap-1"
                   >
                     <span className="relative">
                       {link.label}
@@ -138,7 +138,7 @@ export default function Footer() {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-sm text-[#8A9BB5] hover:text-[#F0F4FF] transition-colors duration-200 group flex items-center gap-1"
+                    className="text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors duration-200 group flex items-center gap-1"
                   >
                     <span className="relative">
                       {link.label}
@@ -161,36 +161,36 @@ export default function Footer() {
 
             <div className="space-y-4 mb-6">
               <a
-                href="mailto:hello@intellinative.com"
+                href="mailto:sales@intellinative.com"
                 className="flex items-center gap-3 group"
               >
                 <span
-                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgba(255,255,255,0.08)] group-hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
-                  style={{ background: 'rgba(255,255,255,0.03)' }}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--glass-border)] group-hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
+                  style={{ background: 'var(--glass-bg)' }}
                 >
                   <Mail size={14} className="text-[#8A9BB5] group-hover:text-[#00D4FF] transition-colors duration-300" />
                 </span>
-                <span className="text-sm text-[#8A9BB5] group-hover:text-[#F0F4FF] transition-colors duration-200">
-                  hello@intellinative.com
+                <span className="text-sm text-[color:var(--text-secondary)] group-hover:text-[color:var(--text-primary)] transition-colors duration-200">
+                  sales@intellinative.com
                 </span>
               </a>
 
               <div className="flex items-center gap-3">
                 <span
-                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[rgba(255,255,255,0.08)]"
-                  style={{ background: 'rgba(255,255,255,0.03)' }}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--glass-border)]"
+                  style={{ background: 'var(--glass-bg)' }}
                 >
                   <MapPin size={14} className="text-[#8A9BB5]" />
                 </span>
-                <span className="text-sm text-[#8A9BB5]">India · Global Delivery</span>
+                <span className="text-sm text-[color:var(--text-secondary)]">India · Global Delivery</span>
               </div>
             </div>
 
             {/* Get in Touch glass button */}
             <Link
               to="/contact"
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[rgba(255,255,255,0.1)] hover:border-[rgba(0,212,255,0.4)] transition-all duration-300 text-sm font-medium text-[#F0F4FF]"
-              style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(8px)' }}
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[color:var(--glass-border)] hover:border-[rgba(0,212,255,0.4)] transition-all duration-300 text-sm font-medium text-[color:var(--text-primary)]"
+              style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)' }}
             >
               Get in Touch
               <ArrowUpRight
@@ -204,9 +204,9 @@ export default function Footer() {
         {/* ── Bottom bar ── */}
         <div
           className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ borderTop: '1px solid var(--glass-border)' }}
         >
-          <p className="text-xs text-[#8A9BB5] opacity-70">
+          <p className="text-xs text-[color:var(--text-secondary)] opacity-70">
             © 2025 Intellinative. All rights reserved.
           </p>
           <p

@@ -381,7 +381,7 @@ export default function PillarsSection() {
   ] as const;
 
   return (
-    <section id="pillars" className="relative py-20 overflow-hidden" style={{ background: '#050810' }}>
+    <section id="pillars" className="relative py-20 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
       {/* Hex texture */}
       <div
         className="absolute inset-0 opacity-[0.018] pointer-events-none"
@@ -391,7 +391,7 @@ export default function PillarsSection() {
         }}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
+      <div className="px-6 md:px-12">
         {/* ── Header ── */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -418,11 +418,11 @@ export default function PillarsSection() {
 
           <h2
             className="text-4xl md:text-5xl font-semibold tracking-tight mb-4"
-            style={{ color: '#F0F4FF', fontFamily: 'var(--font-display)' }}
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
           >
             Secure. Compliant. Observable.
           </h2>
-          <p className="text-base max-w-lg mx-auto" style={{ color: '#8A9BB5' }}>
+          <p className="text-base max-w-lg mx-auto" style={{ color: 'var(--text-secondary)' }}>
             The three principles behind every platform we build.
           </p>
         </motion.div>
@@ -446,10 +446,10 @@ export default function PillarsSection() {
                   minHeight: 420,
                   background: isFeatured
                     ? 'linear-gradient(160deg, rgba(123,47,255,0.1) 0%, rgba(0,212,255,0.07) 100%)'
-                    : 'rgba(255,255,255,0.025)',
+                    : 'var(--bg-secondary)',
                   border: isFeatured
                     ? '1px solid transparent'
-                    : `1px solid rgba(255,255,255,0.07)`,
+                    : `1px solid var(--glass-border)`,
                   ...(isFeatured && {
                     backgroundClip: 'padding-box',
                     boxShadow: '0 0 60px rgba(123,47,255,0.2), 0 0 0 1px rgba(123,47,255,0.25), inset 0 0 0 1px rgba(0,212,255,0.12)',
@@ -530,7 +530,7 @@ export default function PillarsSection() {
 
                   <p
                     className="text-sm leading-relaxed mb-5 line-clamp-2"
-                    style={{ color: '#8A9BB5' }}
+                    style={{ color: 'var(--text-secondary)' }}
                   >
                     {pillar.description}
                   </p>
@@ -614,7 +614,7 @@ export default function PillarsSection() {
             {/* Three node markers */}
             {[167, 500, 833].map((x, i) => (
               <g key={x}>
-                <circle cx={x} cy={20} r={5} fill="#050810" stroke={['#00D4FF', '#7B2FFF', '#00FF88'][i]} strokeWidth="1.5" />
+                <circle cx={x} cy={20} r={5} fill="var(--bg-primary)" stroke={['#00D4FF', '#7B2FFF', '#00FF88'][i]} strokeWidth="1.5" />
                 <circle cx={x} cy={20} r={2} fill={['#00D4FF', '#7B2FFF', '#00FF88'][i]} />
               </g>
             ))}
