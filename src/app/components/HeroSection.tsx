@@ -432,7 +432,7 @@ export default function HeroSection() {
         }
       `}</style>
 
-      <section className="relative min-h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg-primary, #050810)' }}>
+      <section className="relative flex flex-col overflow-hidden md:min-h-screen" style={{ background: 'var(--bg-primary, #050810)' }}>
 
         {/* ── Ambient blobs ── */}
         <div style={{
@@ -474,10 +474,10 @@ export default function HeroSection() {
         />
 
         {/* ── Main hero content ── */}
-        <div className="relative z-10 flex flex-1 min-h-0 flex-col md:flex-row" style={{ minHeight: 'calc(100vh - 120px)' }}>
+        <div className="relative z-10 flex flex-1 min-h-0 flex-col md:flex-row md:min-h-[calc(100vh-60px)]">
 
           {/* LEFT */}
-          <div className="relative flex items-center w-full md:w-1/2 px-5 py-16 md:pl-16 md:pr-10 md:py-24">
+          <div className="relative flex items-center w-full md:w-1/2 px-5 pt-10 pb-12 md:pl-16 md:pr-10 md:py-24">
             <motion.div variants={containerVariants} initial="hidden" animate="show" className="max-w-[580px]">
 
               {/* Badge */}
@@ -496,11 +496,11 @@ export default function HeroSection() {
 
               {/* Headline */}
               <motion.h1 variants={itemVariants} className="mb-7 leading-[1.0]" style={{ fontFamily: 'var(--font-display, Space Grotesk)' }}>
-                <span className="block" style={{ fontSize: 'clamp(62px, 6.8vw, 108px)', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                <span className="block" style={{ fontSize: 'clamp(40px, 10vw, 108px)', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                   Engineering
                 </span>
                 <span className="block" style={{
-                  fontSize: 'clamp(62px, 6.8vw, 108px)', fontWeight: 700, letterSpacing: '-0.02em',
+                  fontSize: 'clamp(40px, 10vw, 108px)', fontWeight: 700, letterSpacing: '-0.02em',
                   background: 'linear-gradient(130deg, #7B2FFF 0%, #00D4FF 55%, #00FF88 100%)',
                   backgroundSize: '200% auto',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
@@ -508,7 +508,7 @@ export default function HeroSection() {
                 }}>
                   Intelligence.
                 </span>
-                <span className="block" style={{ fontSize: 'clamp(42px, 4.6vw, 76px)', fontWeight: 500, letterSpacing: '-0.01em', color: 'var(--text-secondary)' }}>
+                <span className="block" style={{ fontSize: 'clamp(28px, 7vw, 76px)', fontWeight: 500, letterSpacing: '-0.01em', color: 'var(--text-secondary)' }}>
                   Built Native.
                 </span>
               </motion.h1>
