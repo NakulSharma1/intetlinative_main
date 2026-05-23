@@ -1,17 +1,17 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
 import { Copy, Check, Lock } from 'lucide-react';
 
-/* ─────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Animated aurora mesh background
-───────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const AuroraBg = () => (
   <>
     {/* Base layer */}
     <div className="absolute inset-0" style={{ background: 'var(--bg-primary)' }} />
 
-    {/* Violet orb — top left */}
+    {/* Violet orb â€” top left */}
     <div
       className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full pointer-events-none"
       style={{
@@ -21,7 +21,7 @@ const AuroraBg = () => (
       }}
     />
 
-    {/* Cyan orb — bottom right */}
+    {/* Cyan orb â€” bottom right */}
     <div
       className="absolute -bottom-24 -right-24 w-[520px] h-[520px] rounded-full pointer-events-none"
       style={{
@@ -31,7 +31,7 @@ const AuroraBg = () => (
       }}
     />
 
-    {/* Emerald orb — center */}
+    {/* Emerald orb â€” center */}
     <div
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full pointer-events-none"
       style={{
@@ -90,9 +90,9 @@ const AuroraBg = () => (
   </>
 );
 
-/* ─────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Decorative divider line
-───────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const GradientDivider = () => (
   <div className="flex items-center justify-center gap-4 my-8">
     <div className="h-[0.5px] w-20 bg-gradient-to-r from-transparent to-[color:var(--glass-border-bright)]" />
@@ -101,7 +101,7 @@ const GradientDivider = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 export default function ContactSection() {
   const [copied, setCopied] = useState(false);
   const email = 'sales@intellinative.com';
@@ -112,7 +112,7 @@ export default function ContactSection() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2200);
     } catch {
-      // fallback — silently ignore
+      // fallback â€” silently ignore
     }
   };
 
@@ -124,7 +124,7 @@ export default function ContactSection() {
       {/* Aurora background layers */}
       <AuroraBg />
 
-      {/* ── CONTENT ── */}
+      {/* â”€â”€ CONTENT â”€â”€ */}
       <div className="relative z-10 max-w-[820px] mx-auto px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 36 }}
@@ -141,15 +141,15 @@ export default function ContactSection() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 text-xs font-bold tracking-[0.22em] uppercase border border-[rgba(0,255,136,0.3)]"
             style={{
               background: 'rgba(0,255,136,0.08)',
-              color: '#00FF88',
+              color: '#10B981',
               fontFamily: 'var(--font-display)',
             }}
           >
             <span
               className="w-1.5 h-1.5 rounded-full"
               style={{
-                background: '#00FF88',
-                boxShadow: '0 0 6px #00FF88',
+                background: '#10B981',
+                boxShadow: '0 0 6px #10B981',
                 animation: 'pulseGlowDot 2s ease-in-out infinite',
               }}
             />
@@ -168,7 +168,7 @@ export default function ContactSection() {
             Ready to engineer{' '}
             <span
               style={{
-                background: 'linear-gradient(135deg, #7B2FFF 0%, #00D4FF 60%, #00FF88 100%)',
+                background: 'linear-gradient(135deg, #1E7BC4 0%, #00BCD4 60%, #10B981 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -188,14 +188,14 @@ export default function ContactSection() {
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-            {/* Primary — Start Building */}
+            {/* Primary â€” Start Building */}
             <Link to="/contact">
               <motion.div
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-2 px-9 py-4 rounded-full font-bold text-[#050810] text-base transition-all duration-300 cursor-pointer"
                 style={{
-                  background: 'linear-gradient(135deg, #00FF88 0%, #00D4FF 100%)',
+                  background: 'linear-gradient(135deg, #10B981 0%, #00BCD4 100%)',
                   fontFamily: 'var(--font-display)',
                   animation: 'pulseGlow 3s ease-in-out infinite',
                 }}
@@ -216,7 +216,7 @@ export default function ContactSection() {
               </motion.div>
             </Link>
 
-            {/* Secondary — Schedule a Demo */}
+            {/* Secondary â€” Schedule a Demo */}
             <Link to="/contact">
               <motion.div
                 whileHover={{ scale: 1.04 }}
@@ -264,7 +264,7 @@ export default function ContactSection() {
                 <path d="M1 5l6 4 6-4" stroke="#8A9BB5" strokeWidth="1.1" strokeLinejoin="round"/>
               </svg>
               <span
-                className="text-[#00D4FF]"
+                className="text-[#00BCD4]"
                 style={{ fontFamily: 'var(--font-mono)', fontSize: '14px' }}
               >
                 {email}
@@ -290,7 +290,7 @@ export default function ContactSection() {
               aria-label="Copy email address"
             >
               {copied ? (
-                <Check size={16} color="#00FF88" />
+                <Check size={16} color="#10B981" />
               ) : (
                 <Copy size={16} color="#8A9BB5" />
               )}
@@ -302,7 +302,7 @@ export default function ContactSection() {
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: copied ? 1 : 0, y: copied ? 0 : -6 }}
             transition={{ duration: 0.2 }}
-            className="text-xs text-[#00FF88] mb-3 h-4"
+            className="text-xs text-[#10B981] mb-3 h-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {copied && 'Copied to clipboard'}
@@ -320,8 +320,8 @@ export default function ContactSection() {
 
       <style>{`
         @keyframes pulseGlowDot {
-          0%, 100% { opacity: 1; box-shadow: 0 0 6px #00FF88; }
-          50%       { opacity: 0.6; box-shadow: 0 0 12px #00FF88; }
+          0%, 100% { opacity: 1; box-shadow: 0 0 6px #10B981; }
+          50%       { opacity: 0.6; box-shadow: 0 0 12px #10B981; }
         }
       `}</style>
     </section>

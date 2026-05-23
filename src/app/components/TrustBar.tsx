@@ -1,17 +1,17 @@
-import { motion } from 'motion/react';
+﻿import { motion } from 'motion/react';
 import type { FC } from 'react';
 
-/* ─── Inline SVG icons for compliance badges ─── */
+/* â”€â”€â”€ Inline SVG icons for compliance badges â”€â”€â”€ */
 const IsoIcon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <rect x="1" y="1" width="20" height="20" rx="4" stroke="#00D4FF" strokeWidth="1.5"/>
-    <text x="11" y="15" textAnchor="middle" fill="#00D4FF" fontSize="9" fontWeight="700" fontFamily="sans-serif">ISO</text>
+    <rect x="1" y="1" width="20" height="20" rx="4" stroke="#00BCD4" strokeWidth="1.5"/>
+    <text x="11" y="15" textAnchor="middle" fill="#00BCD4" fontSize="9" fontWeight="700" fontFamily="sans-serif">ISO</text>
   </svg>
 );
 const Soc2Icon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <circle cx="11" cy="11" r="9" stroke="#7B2FFF" strokeWidth="1.5"/>
-    <path d="M7 11l3 3 5-5" stroke="#7B2FFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="11" cy="11" r="9" stroke="#1E7BC4" strokeWidth="1.5"/>
+    <path d="M7 11l3 3 5-5" stroke="#1E7BC4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const NistIcon = () => (
@@ -22,15 +22,15 @@ const NistIcon = () => (
 );
 const ZeroTrustIcon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <path d="M11 2L3 6v6c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V6L11 2z" stroke="#00D4FF" strokeWidth="1.5" fill="none"/>
-    <circle cx="11" cy="11" r="2.5" fill="#00D4FF"/>
+    <path d="M11 2L3 6v6c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V6L11 2z" stroke="#00BCD4" strokeWidth="1.5" fill="none"/>
+    <circle cx="11" cy="11" r="2.5" fill="#00BCD4"/>
   </svg>
 );
 const GdprIcon = () => (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-    <rect x="1" y="1" width="20" height="20" rx="10" stroke="#7B2FFF" strokeWidth="1.5"/>
-    <path d="M8 11h4m0 0l-2-2m2 2l-2 2" stroke="#7B2FFF" strokeWidth="1.5" strokeLinecap="round"/>
-    <circle cx="11" cy="11" r="3.5" stroke="#7B2FFF" strokeWidth="1"/>
+    <rect x="1" y="1" width="20" height="20" rx="10" stroke="#1E7BC4" strokeWidth="1.5"/>
+    <path d="M8 11h4m0 0l-2-2m2 2l-2 2" stroke="#1E7BC4" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="11" cy="11" r="3.5" stroke="#1E7BC4" strokeWidth="1"/>
   </svg>
 );
 const CisIcon = () => (
@@ -49,14 +49,14 @@ const MarqueeIcons: Record<string, FC> = {
   'CIS Controls': CisIcon,
   'eBPF Security': () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="8" r="6" stroke="#00D4FF" strokeWidth="1.2"/>
-      <path d="M5 8h6M8 5v6" stroke="#00D4FF" strokeWidth="1.2" strokeLinecap="round"/>
+      <circle cx="8" cy="8" r="6" stroke="#00BCD4" strokeWidth="1.2"/>
+      <path d="M5 8h6M8 5v6" stroke="#00BCD4" strokeWidth="1.2" strokeLinecap="round"/>
     </svg>
   ),
   'DPDP Act': () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <rect x="2" y="2" width="12" height="12" rx="3" stroke="#7B2FFF" strokeWidth="1.2"/>
-      <path d="M5 8l2 2 4-4" stroke="#7B2FFF" strokeWidth="1.2" strokeLinecap="round"/>
+      <rect x="2" y="2" width="12" height="12" rx="3" stroke="#1E7BC4" strokeWidth="1.2"/>
+      <path d="M5 8l2 2 4-4" stroke="#1E7BC4" strokeWidth="1.2" strokeLinecap="round"/>
     </svg>
   ),
   'SEBI': () => (
@@ -77,19 +77,19 @@ const marqueeItems = [
   'GDPR', 'CIS Controls', 'eBPF Security', 'DPDP Act', 'SEBI', 'RBI Guidelines',
 ];
 
-/* ─── Compliance card data for enterprise grid ─── */
+/* â”€â”€â”€ Compliance card data for enterprise grid â”€â”€â”€ */
 const complianceCards = [
   {
     icon: IsoIcon,
     title: 'ISO 27001',
     desc: 'Internationally recognised information security management framework.',
-    color: '#00D4FF',
+    color: '#00BCD4',
   },
   {
     icon: Soc2Icon,
     title: 'SOC 2 Type II',
     desc: 'Audited security, availability & confidentiality controls.',
-    color: '#7B2FFF',
+    color: '#1E7BC4',
   },
   {
     icon: NistIcon,
@@ -100,14 +100,14 @@ const complianceCards = [
   {
     icon: ZeroTrustIcon,
     title: 'Zero Trust',
-    desc: 'Never trust, always verify — identity-centric access control.',
-    color: '#00D4FF',
+    desc: 'Never trust, always verify â€” identity-centric access control.',
+    color: '#00BCD4',
   },
   {
     icon: GdprIcon,
     title: 'GDPR',
     desc: 'European data protection & privacy regulation compliance.',
-    color: '#7B2FFF',
+    color: '#1E7BC4',
   },
   {
     icon: CisIcon,
@@ -117,28 +117,28 @@ const complianceCards = [
   },
 ];
 
-/* ─── Trust metric items (right column) ─── */
+/* â”€â”€â”€ Trust metric items (right column) â”€â”€â”€ */
 const trustMetrics = [
   {
-    dotColor: '#00D4FF',
+    dotColor: '#00BCD4',
     title: 'Enterprise Architecture',
     desc: 'Multi-region active-active deployments with 99.9 % uptime SLA and automated disaster recovery built in from day one.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="1" y="1" width="18" height="18" rx="4" stroke="#00D4FF" strokeWidth="1.5"/>
-        <path d="M5 10h4m0 0V6m0 4v4m0-4h4" stroke="#00D4FF" strokeWidth="1.5" strokeLinecap="round"/>
+        <rect x="1" y="1" width="18" height="18" rx="4" stroke="#00BCD4" strokeWidth="1.5"/>
+        <path d="M5 10h4m0 0V6m0 4v4m0-4h4" stroke="#00BCD4" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
     ),
   },
   {
-    dotColor: '#7B2FFF',
+    dotColor: '#1E7BC4',
     title: 'AI Governance',
     desc: 'Explainable AI pipelines, model drift detection, bias auditing and full audit trails for every automated decision.',
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="8" stroke="#7B2FFF" strokeWidth="1.5"/>
-        <path d="M7 10c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3" stroke="#7B2FFF" strokeWidth="1.5" strokeLinecap="round"/>
-        <circle cx="10" cy="10" r="1.5" fill="#7B2FFF"/>
+        <circle cx="10" cy="10" r="8" stroke="#1E7BC4" strokeWidth="1.5"/>
+        <path d="M7 10c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3" stroke="#1E7BC4" strokeWidth="1.5" strokeLinecap="round"/>
+        <circle cx="10" cy="10" r="1.5" fill="#1E7BC4"/>
       </svg>
     ),
   },
@@ -155,7 +155,7 @@ const trustMetrics = [
   },
 ];
 
-/* ─── Security shield visualisation ─── */
+/* â”€â”€â”€ Security shield visualisation â”€â”€â”€ */
 const ShieldDiagram = () => (
   <div className="relative flex items-center justify-center w-full h-full min-h-[200px]">
     <svg
@@ -173,7 +173,7 @@ const ShieldDiagram = () => (
           cx="110"
           cy="110"
           r={r}
-          stroke={i % 2 === 0 ? '#00D4FF' : '#7B2FFF'}
+          stroke={i % 2 === 0 ? '#00BCD4' : '#1E7BC4'}
           strokeWidth="0.8"
           strokeDasharray="4 6"
           opacity={0.3 + i * 0.1}
@@ -191,14 +191,14 @@ const ShieldDiagram = () => (
       {/* Shield body */}
       <path
         d="M110 28L48 55v38c0 34 26 65 62 74 36-9 62-40 62-74V55L110 28z"
-        stroke="#00D4FF"
+        stroke="#00BCD4"
         strokeWidth="1.5"
         fill="rgba(0,212,255,0.04)"
       />
       {/* Inner shield */}
       <path
         d="M110 50L72 67v24c0 21 16 40 38 46 22-6 38-25 38-46V67L110 50z"
-        stroke="#7B2FFF"
+        stroke="#1E7BC4"
         strokeWidth="1"
         fill="rgba(123,47,255,0.06)"
       />
@@ -219,13 +219,13 @@ const ShieldDiagram = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 export default function TrustBar() {
   const doubled = [...marqueeItems, ...marqueeItems];
 
   return (
     <>
-      {/* ── 1. COMPLIANCE MARQUEE STRIP ── */}
+      {/* â”€â”€ 1. COMPLIANCE MARQUEE STRIP â”€â”€ */}
       <div
         className="relative w-full overflow-hidden border-t border-b border-[color:var(--glass-border)]"
         style={{ background: 'var(--bg-secondary)' }}
@@ -274,7 +274,7 @@ export default function TrustBar() {
         `}</style>
       </div>
 
-      {/* ── 2. ENTERPRISE TRUST SECTION ── */}
+      {/* â”€â”€ 2. ENTERPRISE TRUST SECTION â”€â”€ */}
       <section className="relative py-20 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
         {/* Ambient background glow */}
         <div
@@ -292,7 +292,7 @@ export default function TrustBar() {
               className="inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-[0.2em] uppercase mb-6 border border-[rgba(0,212,255,0.3)]"
               style={{
                 background: 'rgba(0,212,255,0.08)',
-                color: '#00D4FF',
+                color: '#00BCD4',
                 fontFamily: 'var(--font-display)',
               }}
             >
@@ -305,7 +305,7 @@ export default function TrustBar() {
               Trusted.&nbsp;
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #7B2FFF, #00D4FF)',
+                  background: 'linear-gradient(135deg, #1E7BC4, #00BCD4)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -319,7 +319,7 @@ export default function TrustBar() {
 
           {/* Two-column layout */}
           <div className="flex flex-col lg:flex-row gap-12 items-start">
-            {/* Left col — 60% — Compliance badge grid */}
+            {/* Left col â€” 60% â€” Compliance badge grid */}
             <div className="w-full lg:w-[60%]">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {complianceCards.map((card, i) => (
@@ -359,7 +359,7 @@ export default function TrustBar() {
               </div>
             </div>
 
-            {/* Right col — 40% — Trust metrics + shield diagram */}
+            {/* Right col â€” 40% â€” Trust metrics + shield diagram */}
             <div className="w-full lg:w-[40%] flex flex-col gap-8">
               {/* Shield diagram */}
               <div

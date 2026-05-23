@@ -6,11 +6,11 @@ import {
 } from 'lucide-react';
 import PageHero from '../components/PageHero';
 
-const ACCENT_VIOLET = '#7B2FFF';
-const ACCENT_CYAN = '#00D4FF';
-const ACCENT_GREEN = '#00B86B';
-const ACCENT_AMBER = '#FF9D00';
-const ACCENT_PINK = '#FF2E88';
+const ACCENT_VIOLET = '#1E7BC4';
+const ACCENT_CYAN = '#00BCD4';
+const ACCENT_GREEN = '#10B981';
+const ACCENT_AMBER = '#F59E0B';
+const ACCENT_PINK = '#00E5FF';
 
 const containerVariants = {
   hidden: {},
@@ -381,10 +381,10 @@ export default function About() {
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base"
               style={{
-                background: `linear-gradient(135deg, ${ACCENT_VIOLET} 0%, ${ACCENT_CYAN} 100%)`,
-                color: '#fff',
+                background: 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)',
+                color: '#050F1F',
                 fontFamily: 'var(--font-body)',
-                boxShadow: `0 0 32px ${ACCENT_VIOLET}40`,
+                boxShadow: '0 0 28px rgba(0,200,230,0.32)',
               }}
             >
               Start the Conversation

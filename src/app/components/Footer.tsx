@@ -1,31 +1,7 @@
 import { Link } from 'react-router';
 import { Linkedin, Github, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import LogoImage from './LogoImage';
-
-function GlassIconButton({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-[color:var(--glass-border)] hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
-      style={{ background: 'var(--glass-bg)' }}
-    >
-      <span className="text-[#8A9BB5] group-hover:text-[#00D4FF] transition-colors duration-300">
-        {children}
-      </span>
-    </a>
-  );
-}
 
 const companyLinks = [
   { label: 'About',    path: '/about' },
@@ -35,184 +11,263 @@ const companyLinks = [
 ];
 
 const capabilityLinks = [
-  { label: 'Cloud Native',        path: '/services#cloud-native' },
+  { label: 'Cloud Native',         path: '/services#cloud-native' },
   { label: 'Platform Engineering', path: '/services#platform-eng' },
-  { label: 'AIOps',               path: '/services#aiops' },
-  { label: 'Security',            path: '/services#security' },
-  { label: 'App Modernization',   path: '/services#app-modernization' },
-  { label: 'Data & AI',           path: '/services#data-ai' },
+  { label: 'AIOps',                path: '/services#aiops' },
+  { label: 'Security',             path: '/services#security' },
+  { label: 'App Modernization',    path: '/services#app-modernization' },
+  { label: 'Data & AI',            path: '/services#data-ai' },
 ];
 
 export default function Footer() {
+  const { isDark } = useTheme();
+
+  const glassBg     = isDark ? 'rgba(17,24,39,0.60)' : 'rgba(255,255,255,0.70)';
+  const glassBorder = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)';
+
   return (
-    <footer className="relative text-[color:var(--text-primary)]" style={{ background: 'var(--bg-primary)', fontFamily: "'Space Grotesk', sans-serif" }}>
-
-      {/* ── Top gradient accent line ── */}
+    <footer
+      className="relative"
+      style={{
+        background: 'var(--bg-primary)',
+        fontFamily: 'var(--font-display)',
+        color: 'var(--text-primary)',
+      }}
+    >
+      {/* Top gradient accent line — matches nav */}
       <div
         aria-hidden="true"
-        className="absolute top-0 left-0 right-0 h-[1.5px]"
+        className="absolute top-0 left-0 right-0 h-[1px]"
         style={{
-          background:
-            'linear-gradient(90deg, transparent 0%, #7B2FFF 20%, #00D4FF 50%, #7B2FFF 80%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, #00BCD4 30%, #1E7BC4 70%, transparent 100%)',
         }}
       />
 
-      {/* ── Subtle radial ambient glow behind content ── */}
+      {/* Ambient glow */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] opacity-[0.07]"
+        className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[260px]"
         style={{
-          background: 'radial-gradient(ellipse at 50% 0%, #7B2FFF 0%, #00D4FF 50%, transparent 75%)',
-          filter: 'blur(48px)',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(0,188,212,0.10) 0%, transparent 70%)',
+          filter: 'blur(60px)',
         }}
       />
 
-      {/* ── Main grid ── */}
       <div className="relative px-6 md:px-12 pt-20 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
 
-          {/* ── Col 1: Brand (wider) ── */}
+          {/* Brand column */}
           <div className="md:col-span-4 flex flex-col gap-5">
-            <Link to="/" className="flex items-center select-none w-fit">
+            <Link to="/" className="flex items-center select-none w-fit" aria-label="Intellinative home">
               <LogoImage height={44} />
             </Link>
 
             <div className="space-y-1">
-              <p className="text-base font-semibold text-[#F0F4FF]">
+              <p className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
                 Engineering Intelligence. Built Native.
               </p>
-              <p className="text-sm text-[#8A9BB5] leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                 Platform engineering for the AI-native enterprise.
               </p>
             </div>
 
             {/* Social buttons */}
             <div className="flex items-center gap-3 mt-1">
-              <GlassIconButton href="https://linkedin.com/company/intellinative" label="LinkedIn">
-                <span className="flex items-center gap-2 text-sm font-medium">
-                  <Linkedin size={16} />
-                  LinkedIn
-                </span>
-              </GlassIconButton>
-              <GlassIconButton href="https://github.com/intellinative" label="GitHub">
-                <span className="flex items-center gap-2 text-sm font-medium">
-                  <Github size={16} />
-                  GitHub
-                </span>
-              </GlassIconButton>
+              {[
+                { href: 'https://linkedin.com/company/intellinative', label: 'LinkedIn', icon: <Linkedin size={15} /> },
+                { href: 'https://github.com/intellinative', label: 'GitHub', icon: <Github size={15} /> },
+              ].map(({ href, label, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="group flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300"
+                  style={{
+                    background: glassBg,
+                    border: `1px solid ${glassBorder}`,
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    color: 'var(--text-muted)',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.borderColor = 'rgba(0,188,212,0.40)';
+                    el.style.color = 'var(--accent-violet)';
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLAnchorElement;
+                    el.style.borderColor = glassBorder;
+                    el.style.color = 'var(--text-muted)';
+                  }}
+                >
+                  {icon}
+                  {label}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* ── Col 2: Company ── */}
+          {/* Company links */}
           <div className="md:col-span-2 md:col-start-6">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-[#8A9BB5] mb-5">
+            <h4
+              className="text-[10px] font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-muted)', letterSpacing: '0.10em' }}
+            >
               Company
             </h4>
             <ul className="space-y-3">
-              {companyLinks.map((link) => (
+              {companyLinks.map(link => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors duration-200 group flex items-center gap-1"
+                    className="group relative inline-block text-sm transition-colors duration-200"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
                   >
-                    <span className="relative">
-                      {link.label}
-                      <span
-                        className="absolute -bottom-px left-0 h-[1px] w-0 group-hover:w-full transition-all duration-300 rounded-full"
-                        style={{ background: 'linear-gradient(90deg, #7B2FFF, #00D4FF)' }}
-                      />
-                    </span>
+                    {link.label}
+                    <span
+                      className="absolute -bottom-px left-0 h-[1px] w-0 group-hover:w-full transition-all duration-300 rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #00BCD4, #1E7BC4)' }}
+                    />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* ── Col 3: Capabilities ── */}
+          {/* Capabilities links */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-[#8A9BB5] mb-5">
+            <h4
+              className="text-[10px] font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-muted)', letterSpacing: '0.10em' }}
+            >
               Capabilities
             </h4>
             <ul className="space-y-3">
-              {capabilityLinks.map((link) => (
+              {capabilityLinks.map(link => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors duration-200 group flex items-center gap-1"
+                    className="group relative inline-block text-sm transition-colors duration-200"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
                   >
-                    <span className="relative">
-                      {link.label}
-                      <span
-                        className="absolute -bottom-px left-0 h-[1px] w-0 group-hover:w-full transition-all duration-300 rounded-full"
-                        style={{ background: 'linear-gradient(90deg, #7B2FFF, #00D4FF)' }}
-                      />
-                    </span>
+                    {link.label}
+                    <span
+                      className="absolute -bottom-px left-0 h-[1px] w-0 group-hover:w-full transition-all duration-300 rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #00BCD4, #1E7BC4)' }}
+                    />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* ── Col 4: Connect ── */}
+          {/* Connect column */}
           <div className="md:col-span-3">
-            <h4 className="text-xs font-semibold uppercase tracking-widest text-[#8A9BB5] mb-5">
+            <h4
+              className="text-[10px] font-semibold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-muted)', letterSpacing: '0.10em' }}
+            >
               Connect
             </h4>
 
             <div className="space-y-4 mb-6">
               <a
                 href="mailto:sales@intellinative.com"
-                className="flex items-center gap-3 group"
+                className="group flex items-center gap-3"
               >
                 <span
-                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--glass-border)] group-hover:border-[rgba(0,212,255,0.35)] transition-all duration-300"
-                  style={{ background: 'var(--glass-bg)' }}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300"
+                  style={{
+                    background: glassBg,
+                    border: `1px solid ${glassBorder}`,
+                    backdropFilter: 'blur(8px)',
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(0,188,212,0.40)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = glassBorder; }}
                 >
-                  <Mail size={14} className="text-[#8A9BB5] group-hover:text-[#00D4FF] transition-colors duration-300" />
+                  <Mail
+                    size={14}
+                    style={{ color: 'var(--text-muted)', transition: 'color 0.2s' }}
+                    className="group-hover:!text-[#00BCD4]"
+                  />
                 </span>
-                <span className="text-sm text-[color:var(--text-secondary)] group-hover:text-[color:var(--text-primary)] transition-colors duration-200">
+                <span
+                  className="text-sm transition-colors duration-200"
+                  style={{ color: 'var(--text-secondary)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'; }}
+                >
                   sales@intellinative.com
                 </span>
               </a>
 
               <div className="flex items-center gap-3">
                 <span
-                  className="flex items-center justify-center w-8 h-8 rounded-lg border border-[color:var(--glass-border)]"
-                  style={{ background: 'var(--glass-bg)' }}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg"
+                  style={{
+                    background: glassBg,
+                    border: `1px solid ${glassBorder}`,
+                    backdropFilter: 'blur(8px)',
+                  }}
                 >
-                  <MapPin size={14} className="text-[#8A9BB5]" />
+                  <MapPin size={14} style={{ color: 'var(--text-muted)' }} />
                 </span>
-                <span className="text-sm text-[color:var(--text-secondary)]">India · Global Delivery</span>
+                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  India · Global Delivery
+                </span>
               </div>
             </div>
 
-            {/* Get in Touch glass button */}
+            {/* Get in Touch CTA */}
             <Link
               to="/contact"
-              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[color:var(--glass-border)] hover:border-[rgba(0,212,255,0.4)] transition-all duration-300 text-sm font-medium text-[color:var(--text-primary)]"
-              style={{ background: 'var(--glass-bg)', backdropFilter: 'blur(8px)' }}
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-[14px] text-sm font-semibold transition-all duration-300"
+              style={{
+                background: glassBg,
+                border: `1px solid ${glassBorder}`,
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                color: 'var(--text-primary)',
+              }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = 'rgba(0,188,212,0.45)';
+                el.style.boxShadow = '0 0 20px rgba(0,188,212,0.12)';
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.borderColor = glassBorder;
+                el.style.boxShadow = 'none';
+              }}
             >
               Get in Touch
               <ArrowUpRight
                 size={15}
-                className="text-[#8A9BB5] group-hover:text-[#00D4FF] transition-colors duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transform"
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                style={{ color: 'var(--text-muted)', transition: 'color 0.2s, transform 0.3s' }}
               />
             </Link>
           </div>
         </div>
 
-        {/* ── Bottom bar ── */}
+        {/* Bottom bar */}
         <div
           className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ borderTop: '1px solid var(--glass-border)' }}
+          style={{ borderTop: `1px solid ${glassBorder}` }}
         >
-          <p className="text-xs text-[color:var(--text-secondary)] opacity-70">
+          <p className="text-xs" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
             © 2025 Intellinative. All rights reserved.
           </p>
           <p
-            className="text-xs font-medium opacity-70"
+            className="text-xs font-semibold"
             style={{
-              background: 'linear-gradient(90deg, #7B2FFF, #00D4FF)',
+              background: 'linear-gradient(90deg, #00BCD4, #1E7BC4)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',

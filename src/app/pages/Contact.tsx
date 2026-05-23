@@ -7,11 +7,11 @@ import {
 } from 'lucide-react';
 import PageHero from '../components/PageHero';
 
-const ACCENT_VIOLET = '#7B2FFF';
-const ACCENT_CYAN = '#00D4FF';
-const ACCENT_GREEN = '#00B86B';
-const ACCENT_AMBER = '#FF9D00';
-const ACCENT_PINK = '#FF2E88';
+const ACCENT_VIOLET = '#1E7BC4';
+const ACCENT_CYAN = '#00BCD4';
+const ACCENT_GREEN = '#10B981';
+const ACCENT_AMBER = '#F59E0B';
+const ACCENT_PINK = '#00E5FF';
 
 const SERVICE_OPTIONS = [
   { label: 'Cloud Native', color: ACCENT_CYAN },
@@ -19,7 +19,7 @@ const SERVICE_OPTIONS = [
   { label: 'AIOps', color: ACCENT_AMBER },
   { label: 'Security', color: ACCENT_PINK },
   { label: 'Modernization', color: ACCENT_GREEN },
-  { label: 'Other', color: '#8A9BB5' },
+  { label: 'Other', color: 'var(--text-muted)' },
 ];
 
 const containerVariants = {
@@ -96,7 +96,7 @@ export default function Contact() {
   ];
 
   const getFocusBorder = (field: string) =>
-    focusedField === field ? `1px solid ${ACCENT_CYAN}` : '1px solid var(--glass-border)';
+    focusedField === field ? '1px solid rgba(0,188,212,0.55)' : '1px solid var(--glass-border)';
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)', position: 'relative' }}>
@@ -297,15 +297,16 @@ export default function Contact() {
                 <motion.div variants={fieldVariants}>
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: 1.02, boxShadow: `0 0 32px ${ACCENT_GREEN}50` }}
+                    whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(0,200,230,0.45)' }}
                     whileTap={{ scale: 0.97 }}
-                    className="w-full px-8 py-4 rounded-full font-bold text-base inline-flex items-center justify-center gap-2"
+                    className="w-full px-8 py-4 rounded-[14px] font-bold text-base inline-flex items-center justify-center gap-2"
                     style={{
-                      background: `linear-gradient(135deg, ${ACCENT_GREEN} 0%, ${ACCENT_CYAN} 100%)`,
-                      color: '#fff',
+                      background: 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)',
+                      color: '#050F1F',
                       fontFamily: 'var(--font-body)',
                       border: 'none',
                       cursor: 'pointer',
+                      boxShadow: '0 0 24px rgba(0,200,230,0.28)',
                     }}
                   >
                     {submitted ? (

@@ -1,88 +1,104 @@
 @custom-variant dark (&:is(.dark *));
 
+/* ════════════════════════════════════════════════════════════════
+   INTELLINATIVE — BRAND-ALIGNED DESIGN SYSTEM
+   Colors sourced directly from IntelliNative logo
+   Logo palette: #00E5FF (bright cyan) · #00B8CF (teal)
+                 #1A6FA8 (ocean blue) · #0D1B40 (deep navy)
+════════════════════════════════════════════════════════════════ */
+
 :root {
-  /* Intellinative Color System */
-  --bg-primary: #050810;
-  --bg-secondary: #080D1A;
-  --bg-tertiary: #0C1220;
+  /* ── Dark Theme Backgrounds — navy-tinted like logo wordmark ── */
+  --bg-primary:   #050F1F;
+  --bg-secondary: #0A1628;
+  --bg-tertiary:  #0F1E35;
+  --bg-elevated:  #152440;
 
-  /* Accent Colors */
-  --accent-cyan: #00D4FF;
-  --accent-violet: #7B2FFF;
-  --accent-emerald: #00FF88;
-  --accent-amber: #FF9D00;
-  --accent-pink: #FF2E88;
-  --accent-teal: #00FFD4;
+  /* ── Brand Colors — extracted from logo ── */
+  --accent-cyan:    #00E5FF;   /* logo bright cyan edge */
+  --accent-teal:    #00BCD4;   /* logo mid teal */
+  --accent-blue:    #1E7BC4;   /* logo steel/ocean blue */
+  --accent-navy:    #1354A0;   /* logo deep blue facet */
+  --accent-emerald: #10B981;   /* supporting green */
+  --accent-amber:   #F59E0B;   /* supporting amber */
+  --accent-rose:    #F43F5E;   /* supporting rose */
 
-  /* Text Colors */
-  --text-primary: #F0F4FF;
-  --text-secondary: #8A9BB5;
-  --text-muted: #4A5568;
+  /* ── Primary gradient — logo ribbon: cyan → teal → blue ── */
+  --gradient-brand:   linear-gradient(135deg, #00E5FF 0%, #00BCD4 50%, #1E7BC4 100%);
+  --gradient-hero:    linear-gradient(135deg, #00E5FF 0%, #1E7BC4 100%);
+  --gradient-subtle:  linear-gradient(135deg, rgba(0,229,255,0.12) 0%, rgba(30,123,196,0.08) 100%);
 
-  /* Gradients */
-  --gradient-a: linear-gradient(135deg, #7B2FFF 0%, #00D4FF 100%);
-  --gradient-b: linear-gradient(135deg, #00FF88 0%, #00D4FF 100%);
-  --gradient-c: radial-gradient(circle, rgba(123,47,255,0.15) 0%, transparent 70%);
+  /* ── Text ── */
+  --text-primary:   #F0F6FF;
+  --text-secondary: #B8D0E8;
+  --text-muted:     #7A9BB8;
+  --text-faint:     #3D5A73;
 
-  /* Glass Surface */
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-bright: rgba(255, 255, 255, 0.12);
+  /* ── Glass Surfaces (dark) ── */
+  --glass-bg:            rgba(10, 22, 40, 0.72);
+  --glass-border:        rgba(0, 229, 255, 0.08);
+  --glass-border-bright: rgba(0, 229, 255, 0.18);
 
-  /* Effects */
-  --glow-cyan: 0 0 30px rgba(0,212,255,0.12), 0 0 60px rgba(123,47,255,0.08);
-  --glow-violet: 0 0 40px rgba(123,47,255,0.15), 0 0 80px rgba(123,47,255,0.08);
-  --glow-emerald: 0 0 40px rgba(0,255,136,0.25);
+  /* ── Glows ── */
+  --glow-cyan:    0 0 40px rgba(0, 229, 255, 0.18);
+  --glow-teal:    0 0 30px rgba(0, 188, 212, 0.14);
+  --glow-blue:    0 0 30px rgba(30, 123, 196, 0.14);
 
-  /* Typography */
+  /* ── Shadows ── */
+  --shadow-card:       0 1px 3px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.35);
+  --shadow-card-hover: 0 4px 24px rgba(0,0,0,0.55), 0 0 40px rgba(0,229,255,0.10);
+  --shadow-elevated:   0 8px 40px rgba(0,0,0,0.65);
+
+  /* ── Typography ── */
   --font-display: 'Space Grotesk', 'Figtree', system-ui, sans-serif;
-  --font-body: 'Figtree', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-body:    'Figtree', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
 
-  /* Spacing */
-  --section-padding: 140px;
-  --container-max: 1200px;
-  --h-padding-desktop: 120px;
-  --h-padding-tablet: 40px;
-  --h-padding-mobile: 20px;
+  /* ── Spacing ── */
+  --section-padding:     120px;
+  --container-max:       1200px;
+  --h-padding-desktop:   96px;
+  --h-padding-tablet:    40px;
+  --h-padding-mobile:    20px;
 
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-  --radius-3xl: 32px;
+  /* ── Border Radius ── */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-2xl:  24px;
+  --radius-3xl:  32px;
   --radius-full: 9999px;
 
-  /* Standard theme tokens */
+  /* ── Standard Tokens ── */
   --font-size: 16px;
-  --background: var(--bg-primary);
-  --foreground: var(--text-primary);
-  --card: var(--bg-secondary);
-  --card-foreground: var(--text-primary);
-  --popover: var(--bg-secondary);
-  --popover-foreground: var(--text-primary);
-  --primary: var(--accent-cyan);
-  --primary-foreground: var(--bg-primary);
-  --secondary: var(--bg-tertiary);
+  --background:          var(--bg-primary);
+  --foreground:          var(--text-primary);
+  --card:                var(--bg-secondary);
+  --card-foreground:     var(--text-primary);
+  --popover:             var(--bg-secondary);
+  --popover-foreground:  var(--text-primary);
+  --primary:             var(--accent-cyan);
+  --primary-foreground:  #050F1F;
+  --secondary:           var(--bg-tertiary);
   --secondary-foreground: var(--text-primary);
-  --muted: var(--bg-tertiary);
-  --muted-foreground: var(--text-muted);
-  --accent: var(--accent-violet);
-  --accent-foreground: var(--text-primary);
-  --destructive: #d4183d;
+  --muted:               var(--bg-tertiary);
+  --muted-foreground:    var(--text-muted);
+  --accent:              var(--accent-cyan);
+  --accent-foreground:   var(--text-primary);
+  --destructive:         #EF4444;
   --destructive-foreground: #ffffff;
-  --border: var(--glass-border);
-  --input: transparent;
-  --input-background: var(--bg-tertiary);
-  --switch-background: var(--text-muted);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: var(--accent-cyan);
-  --radius: var(--radius-lg);
+  --border:              var(--glass-border);
+  --input:               transparent;
+  --input-background:    var(--bg-tertiary);
+  --switch-background:   var(--text-faint);
+  --font-weight-medium:  500;
+  --font-weight-normal:  400;
+  --ring:                var(--accent-cyan);
+  --radius:              var(--radius-lg);
 }
 
+/* ── Legacy dark class (shadcn compat) ── */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -120,26 +136,70 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* ════════════════════════════════════════════════════════════════
+   PREMIUM LIGHT THEME — blue-ivory, jewel-tone accents
+════════════════════════════════════════════════════════════════ */
 [data-theme="light"] {
-  --bg-primary: #eef2f8;
-  --bg-secondary: #e4eaf3;
-  --bg-tertiary: #d8e0ee;
-  --text-primary: #0a0f1e;
-  --text-secondary: #3d4f6a;
-  --text-muted: #6b7a94;
-  --glass-bg: rgba(0, 0, 0, 0.04);
-  --glass-border: rgba(0, 0, 0, 0.09);
-  --glass-border-bright: rgba(0, 0, 0, 0.15);
-  --background: var(--bg-primary);
-  --foreground: var(--text-primary);
-  --card: #e4eaf3;
-  --card-foreground: #0a0f1e;
-  --muted: #d8e0ee;
-  --muted-foreground: #6b7a94;
-  --glow-cyan: 0 0 30px rgba(0,212,255,0.18), 0 0 60px rgba(123,47,255,0.10);
-  --glow-violet: 0 0 40px rgba(123,47,255,0.20), 0 0 80px rgba(123,47,255,0.10);
+  /* ── Backgrounds — cool blue-ivory depth ── */
+  --bg-primary:   #F5F6FA;   /* cool blue-ivory — replaces flat white */
+  --bg-secondary: #FFFFFF;   /* pure white cards lift naturally */
+  --bg-tertiary:  #E8EAF5;   /* blue-tinted muted surface */
+  --bg-elevated:  #FFFFFF;
+
+  /* ── Brand accent — indigo/violet jewel tones ── */
+  --accent-cyan:    #4F46E5;   /* indigo-600 — premium anchor */
+  --accent-teal:    #7C3AED;   /* violet-600 */
+  --accent-blue:    #9333EA;   /* purple-600 */
+  --accent-navy:    #0B0F1E;   /* deep midnight navy foreground */
+  --accent-emerald: #059669;
+  --accent-amber:   #B45309;
+  --accent-rose:    #BE123C;
+
+  /* ── Gradients — jewel-tone indigo→violet→purple ── */
+  --gradient-brand:   linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%);
+  --gradient-hero:    linear-gradient(130deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%);
+  --gradient-subtle:  linear-gradient(135deg, rgba(79,70,229,0.07) 0%, rgba(147,51,234,0.05) 100%);
+
+  /* ── Text — deep midnight navy, high contrast ── */
+  --text-primary:   #0B0F1E;   /* deep midnight navy */
+  --text-secondary: #1E2A4A;
+  --text-muted:     #5A6080;   /* blue-tinted muted */
+  --text-faint:     #9095B0;
+
+  /* ── Glass Surfaces — white cards on blue-ivory ── */
+  --glass-bg:            rgba(255, 255, 255, 0.94);
+  --glass-border:        rgba(79, 70, 229, 0.10);
+  --glass-border-bright: rgba(79, 70, 229, 0.22);
+
+  /* ── Glows (light) — indigo/violet ── */
+  --glow-cyan:    0 4px 24px rgba(79, 70, 229, 0.18), 0 1px 4px rgba(79, 70, 229, 0.10);
+  --glow-teal:    0 4px 20px rgba(124, 58, 237, 0.15);
+  --glow-blue:    0 4px 20px rgba(147, 51, 234, 0.15);
+
+  /* ── Shadows — clear elevation depth ── */
+  --shadow-card:       0 1px 4px rgba(11,15,30,0.08), 0 4px 20px rgba(11,15,30,0.05);
+  --shadow-card-hover: 0 8px 32px rgba(79,70,229,0.14), 0 2px 8px rgba(11,15,30,0.07);
+  --shadow-elevated:   0 12px 40px rgba(11,15,30,0.12), 0 2px 8px rgba(11,15,30,0.07);
+
+  /* ── Standard Tokens ── */
+  --background:          var(--bg-primary);
+  --foreground:          var(--text-primary);
+  --card:                #FFFFFF;
+  --card-foreground:     var(--text-primary);
+  --muted:               var(--bg-tertiary);
+  --muted-foreground:    var(--text-muted);
+  --primary:             var(--accent-cyan);
+  --primary-foreground:  #ffffff;
+  --secondary:           var(--bg-tertiary);
+  --secondary-foreground: var(--text-primary);
+  --border:              var(--glass-border);
+  --input-background:    #FFFFFF;
+  --ring:                var(--accent-cyan);
 }
 
+/* ════════════════════════════════════════════════════════════════
+   TAILWIND v4 THEME MAPPING
+════════════════════════════════════════════════════════════════ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -181,6 +241,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ════════════════════════════════════════════════════════════════
+   BASE STYLES
+════════════════════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -193,12 +256,9 @@
     background: var(--bg-primary);
     color: var(--text-primary);
     transition: background 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
 
   html {
     font-size: var(--font-size);
@@ -207,63 +267,74 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-  }
-
-  h1 {
-    font-size: 88px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-  }
-
-  h2 {
-    font-size: 56px;
-    font-weight: 600;
-    line-height: 1.2;
     letter-spacing: -0.02em;
   }
 
-  h3 {
-    font-size: 28px;
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-  }
-
-  h4 {
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 1.5;
-  }
+  h1 { font-size: clamp(52px, 8vw, 88px); font-weight: 700; line-height: 1.05; }
+  h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 600; line-height: 1.15; }
+  h3 { font-size: clamp(20px, 2.5vw, 28px); font-weight: 500; line-height: 1.3; }
+  h4 { font-size: 18px; font-weight: 500; line-height: 1.5; }
 
   p {
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.75;
+    font-family: var(--font-body);
   }
 
   label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
+    font-size: 14px;
+    font-weight: 500;
     line-height: 1.5;
+    font-family: var(--font-body);
   }
 
-  button {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
+  button { font-family: var(--font-body); font-weight: 500; cursor: pointer; }
+
+  input, textarea, select {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
     line-height: 1.5;
+    background: var(--input-background);
+    color: var(--text-primary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
   }
 
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
+  input:focus, textarea:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.10);
   }
 
-  code, pre {
-    font-family: var(--font-mono);
+  input::placeholder, textarea::placeholder {
+    color: var(--text-faint);
   }
+
+  code, pre { font-family: var(--font-mono); }
 }
 
+/* ════════════════════════════════════════════════════════════════
+   LIGHT THEME OVERRIDES — Surface elevation
+════════════════════════════════════════════════════════════════ */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background: #ffffff;
+  border-color: rgba(79, 70, 229, 0.16);
+  box-shadow: 0 1px 3px rgba(11, 15, 30, 0.06);
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14), 0 1px 3px rgba(11, 15, 30, 0.06);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+════════════════════════════════════════════════════════════════ */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -276,21 +347,30 @@
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
 
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }

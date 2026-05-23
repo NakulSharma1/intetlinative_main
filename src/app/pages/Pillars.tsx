@@ -6,11 +6,11 @@ import {
 } from 'lucide-react';
 import PageHero from '../components/PageHero';
 
-const ACCENT_VIOLET = '#7B2FFF';
-const ACCENT_CYAN = '#00D4FF';
-const ACCENT_GREEN = '#00B86B';
-const ACCENT_AMBER = '#FF9D00';
-const ACCENT_PINK = '#FF2E88';
+const ACCENT_VIOLET = '#1E7BC4';
+const ACCENT_CYAN = '#00BCD4';
+const ACCENT_GREEN = '#10B981';
+const ACCENT_AMBER = '#F59E0B';
+const ACCENT_PINK = '#00E5FF';
 
 const containerVariants = {
   hidden: {},
@@ -264,10 +264,10 @@ export default function Pillars() {
                       <div
                         className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold mb-4 flex-shrink-0"
                         style={{
-                          background: `linear-gradient(135deg, ${pillar.color}, ${ACCENT_CYAN})`,
+                          background: `linear-gradient(135deg, ${pillar.color}, rgba(168,85,247,0.8))`,
                           color: '#fff',
                           fontFamily: 'var(--font-display)',
-                          boxShadow: `0 0 16px ${pillar.color}40`,
+                          boxShadow: `0 0 16px rgba(124,58,237,0.30)`,
                         }}
                       >
                         {step.step}
@@ -491,8 +491,8 @@ export default function Pillars() {
                 whileTap={{ scale: 0.97 }}
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-base"
                 style={{
-                  background: `linear-gradient(135deg, ${ACCENT_GREEN} 0%, ${ACCENT_CYAN} 100%)`,
-                  color: '#fff',
+                  background: 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)',
+                  color: '#050F1F',
                   fontFamily: 'var(--font-body)',
                   textDecoration: 'none',
                 }}

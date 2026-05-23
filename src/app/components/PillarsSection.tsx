@@ -1,15 +1,15 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'motion/react';
 
-/* ─── Security SVG: Shield with circuit board + concentric rings ─── */
+/* â”€â”€â”€ Security SVG: Shield with circuit board + concentric rings â”€â”€â”€ */
 function SecuritySVG() {
   return (
     <svg viewBox="0 0 280 200" className="w-full h-full" aria-hidden="true">
       <defs>
         <radialGradient id="sec-bloom" cx="50%" cy="55%" r="50%">
-          <stop offset="0%" stopColor="#00D4FF" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#00D4FF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#00BCD4" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="#00BCD4" stopOpacity="0" />
         </radialGradient>
         <filter id="sec-glow">
           <feGaussianBlur stdDeviation="5" result="blur" />
@@ -27,7 +27,7 @@ function SecuritySVG() {
       {/* Bloom */}
       <ellipse cx="140" cy="110" rx="90" ry="80" fill="url(#sec-bloom)" />
 
-      {/* Concentric rings — pulsing */}
+      {/* Concentric rings â€” pulsing */}
       {[60, 78, 96].map((r, i) => (
         <circle
           key={r}
@@ -35,7 +35,7 @@ function SecuritySVG() {
           cy="108"
           r={r}
           fill="none"
-          stroke="#00D4FF"
+          stroke="#00BCD4"
           strokeWidth="0.75"
           strokeOpacity="0.18"
         >
@@ -60,14 +60,14 @@ function SecuritySVG() {
       <path
         d="M140 24 L196 48 L196 112 Q196 158 140 182 Q84 158 84 112 L84 48 Z"
         fill="rgba(0,212,255,0.06)"
-        stroke="#00D4FF"
+        stroke="#00BCD4"
         strokeWidth="1.5"
         strokeOpacity="0.5"
         filter="url(#sec-glow)"
       />
 
       {/* Circuit lines inside shield */}
-      <g clipPath="url(#shield-clip)" stroke="#00D4FF" strokeWidth="1" strokeOpacity="0.3" fill="none">
+      <g clipPath="url(#shield-clip)" stroke="#00BCD4" strokeWidth="1" strokeOpacity="0.3" fill="none">
         {/* Horizontal grid */}
         {[72, 88, 104, 120, 136].map((yy) => (
           <line key={yy} x1="85" y1={yy} x2="195" y2={yy} strokeDasharray="4 6" />
@@ -83,15 +83,15 @@ function SecuritySVG() {
           [105, 120], [175, 120],
           [140, 136],
         ].map(([cx, cy]) => (
-          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="3.5" fill="#00D4FF" fillOpacity="0.6" stroke="none" />
+          <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="3.5" fill="#00BCD4" fillOpacity="0.6" stroke="none" />
         ))}
       </g>
 
       {/* Center shield lock icon */}
       <g filter="url(#sec-glow)">
-        <rect x="127" y="105" width="26" height="22" rx="4" fill="rgba(0,212,255,0.15)" stroke="#00D4FF" strokeWidth="1.5" />
-        <path d="M133 105 Q133 96 140 96 Q147 96 147 105" fill="none" stroke="#00D4FF" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="140" cy="116" r="3" fill="#00D4FF">
+        <rect x="127" y="105" width="26" height="22" rx="4" fill="rgba(0,212,255,0.15)" stroke="#00BCD4" strokeWidth="1.5" />
+        <path d="M133 105 Q133 96 140 96 Q147 96 147 105" fill="none" stroke="#00BCD4" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx="140" cy="116" r="3" fill="#00BCD4">
           <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite" />
         </circle>
       </g>
@@ -99,7 +99,7 @@ function SecuritySVG() {
   );
 }
 
-/* ─── Compliance SVG: Document stack + certification badges ─── */
+/* â”€â”€â”€ Compliance SVG: Document stack + certification badges â”€â”€â”€ */
 function ComplianceSVG() {
   const badges = [
     { label: 'ISO', x: 88, y: 52 },
@@ -114,16 +114,16 @@ function ComplianceSVG() {
     <svg viewBox="0 0 300 200" className="w-full h-full" aria-hidden="true">
       <defs>
         <linearGradient id="comp-badge-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#7B2FFF" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#00D4FF" stopOpacity="0.25" />
+          <stop offset="0%" stopColor="#1E7BC4" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#00BCD4" stopOpacity="0.25" />
         </linearGradient>
         <linearGradient id="comp-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#7B2FFF" />
-          <stop offset="100%" stopColor="#00D4FF" />
+          <stop offset="0%" stopColor="#1E7BC4" />
+          <stop offset="100%" stopColor="#00BCD4" />
         </linearGradient>
         <radialGradient id="comp-bloom" cx="50%" cy="60%" r="50%">
-          <stop offset="0%" stopColor="#7B2FFF" stopOpacity="0.2" />
-          <stop offset="100%" stopColor="#00D4FF" stopOpacity="0" />
+          <stop offset="0%" stopColor="#1E7BC4" stopOpacity="0.2" />
+          <stop offset="100%" stopColor="#00BCD4" stopOpacity="0" />
         </radialGradient>
         <filter id="comp-glow">
           <feGaussianBlur stdDeviation="4" result="blur" />
@@ -179,11 +179,11 @@ function ComplianceSVG() {
             x={b.x}
             y={b.y - 4}
             textAnchor="middle"
-            fill="#00FF88"
+            fill="#10B981"
             fontSize="9"
             fontFamily="sans-serif"
           >
-            ✓
+            âœ“
           </text>
           <text
             x={b.x}
@@ -221,7 +221,7 @@ function ComplianceSVG() {
   );
 }
 
-/* ─── Observability SVG: Waveform + bar chart dashboard ─── */
+/* â”€â”€â”€ Observability SVG: Waveform + bar chart dashboard â”€â”€â”€ */
 function ObservabilitySVG() {
   // Sine wave path
   const points: string[] = [];
@@ -237,17 +237,17 @@ function ObservabilitySVG() {
     <svg viewBox="0 0 280 200" className="w-full h-full" aria-hidden="true">
       <defs>
         <radialGradient id="obs-bloom" cx="50%" cy="45%" r="55%">
-          <stop offset="0%" stopColor="#00FF88" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="#00FF88" stopOpacity="0" />
+          <stop offset="0%" stopColor="#10B981" stopOpacity="0.15" />
+          <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="wave-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#00FF88" stopOpacity="0.2" />
-          <stop offset="50%" stopColor="#00FF88" stopOpacity="1" />
-          <stop offset="100%" stopColor="#00FF88" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#10B981" stopOpacity="0.2" />
+          <stop offset="50%" stopColor="#10B981" stopOpacity="1" />
+          <stop offset="100%" stopColor="#10B981" stopOpacity="0.2" />
         </linearGradient>
         <linearGradient id="bar-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#00FF88" />
-          <stop offset="100%" stopColor="#00FF88" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#10B981" />
+          <stop offset="100%" stopColor="#10B981" stopOpacity="0.2" />
         </linearGradient>
         <filter id="obs-glow">
           <feGaussianBlur stdDeviation="3" result="blur" />
@@ -328,7 +328,7 @@ function ObservabilitySVG() {
       </path>
 
       {/* Live dot on wave end */}
-      <circle cx="250" cy="68" r="5" fill="#00FF88" filter="url(#obs-glow)">
+      <circle cx="250" cy="68" r="5" fill="#10B981" filter="url(#obs-glow)">
         <animate attributeName="r" values="5;8;5" dur="1.5s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="1;0.5;1" dur="1.5s" repeatCount="indefinite" />
       </circle>
@@ -339,13 +339,13 @@ function ObservabilitySVG() {
         <text x="82" y="148">P95</text>
         <text x="134" y="148">P99</text>
         <text x="190" y="148">ERR%</text>
-        <text x="230" y="148" fill="#00FF88">LIVE</text>
+        <text x="230" y="148" fill="#10B981">LIVE</text>
       </g>
     </svg>
   );
 }
 
-/* ─── Main Component ─── */
+/* â”€â”€â”€ Main Component â”€â”€â”€ */
 export default function PillarsSection() {
   const pillars = [
     {
@@ -354,7 +354,7 @@ export default function PillarsSection() {
       description:
         'Zero-trust architecture with shift-left principles and continuous threat detection across your entire stack.',
       tags: ['Zero Trust', 'DevSecOps', 'SAST/DAST', 'eBPF Security'],
-      accent: '#00D4FF',
+      accent: '#00BCD4',
       SVG: SecuritySVG,
       featured: false,
     },
@@ -374,7 +374,7 @@ export default function PillarsSection() {
       description:
         'Full-stack visibility with AI-powered insights, real-time monitoring, and predictive anomaly detection.',
       tags: ['Prometheus', 'Grafana', 'OpenTelemetry', 'AIOps'],
-      accent: '#00FF88',
+      accent: '#10B981',
       SVG: ObservabilitySVG,
       featured: false,
     },
@@ -392,7 +392,7 @@ export default function PillarsSection() {
       />
 
       <div className="px-6 md:px-12">
-        {/* ── Header ── */}
+        {/* â”€â”€ Header â”€â”€ */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -405,13 +405,13 @@ export default function PillarsSection() {
             style={{
               background: 'rgba(123,47,255,0.08)',
               border: '1px solid rgba(123,47,255,0.28)',
-              color: '#7B2FFF',
+              color: '#1E7BC4',
               fontFamily: 'var(--font-display)',
             }}
           >
             <span
               className="w-1.5 h-1.5 rounded-full inline-block"
-              style={{ background: '#7B2FFF' }}
+              style={{ background: '#1E7BC4' }}
             />
             FOUNDATION
           </div>
@@ -427,11 +427,11 @@ export default function PillarsSection() {
           </p>
         </motion.div>
 
-        {/* ── 3-Column Card Grid ── */}
+        {/* â”€â”€ 3-Column Card Grid â”€â”€ */}
         <div className="grid md:grid-cols-3 gap-6 mb-12 items-start">
           {pillars.map((pillar, i) => {
             const isFeatured = pillar.featured;
-            const accentColor = pillar.accent === 'gradient' ? '#7B2FFF' : pillar.accent;
+            const accentColor = pillar.accent === 'gradient' ? '#1E7BC4' : pillar.accent;
 
             return (
               <motion.div
@@ -468,7 +468,7 @@ export default function PillarsSection() {
                     className="absolute inset-0 rounded-2xl pointer-events-none"
                     style={{
                       padding: '1px',
-                      background: 'linear-gradient(135deg, #7B2FFF, #00D4FF)',
+                      background: 'linear-gradient(135deg, #1E7BC4, #00BCD4)',
                       WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                       WebkitMaskComposite: 'xor',
                       maskComposite: 'exclude',
@@ -484,7 +484,7 @@ export default function PillarsSection() {
                   />
                 )}
 
-                {/* SVG Illustration — ~40% of card height */}
+                {/* SVG Illustration â€” ~40% of card height */}
                 <div
                   className="relative overflow-hidden"
                   style={{ height: 170 }}
@@ -518,7 +518,7 @@ export default function PillarsSection() {
                     style={{
                       fontFamily: 'var(--font-display)',
                       background: isFeatured
-                        ? 'linear-gradient(90deg, #7B2FFF, #00D4FF)'
+                        ? 'linear-gradient(90deg, #1E7BC4, #00BCD4)'
                         : 'none',
                       WebkitBackgroundClip: isFeatured ? 'text' : undefined,
                       WebkitTextFillColor: isFeatured ? 'transparent' : accentColor,
@@ -568,7 +568,7 @@ export default function PillarsSection() {
           })}
         </div>
 
-        {/* ── Animated SVG Connector ── */}
+        {/* â”€â”€ Animated SVG Connector â”€â”€ */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -585,11 +585,11 @@ export default function PillarsSection() {
           >
             <defs>
               <linearGradient id="connector-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#00D4FF" stopOpacity="0" />
-                <stop offset="15%" stopColor="#00D4FF" stopOpacity="0.6" />
-                <stop offset="50%" stopColor="#7B2FFF" stopOpacity="0.8" />
-                <stop offset="85%" stopColor="#00FF88" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#00FF88" stopOpacity="0" />
+                <stop offset="0%" stopColor="#00BCD4" stopOpacity="0" />
+                <stop offset="15%" stopColor="#00BCD4" stopOpacity="0.6" />
+                <stop offset="50%" stopColor="#1E7BC4" stopOpacity="0.8" />
+                <stop offset="85%" stopColor="#10B981" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#10B981" stopOpacity="0" />
               </linearGradient>
               <filter id="dot-glow">
                 <feGaussianBlur stdDeviation="3" result="blur" />
@@ -614,13 +614,13 @@ export default function PillarsSection() {
             {/* Three node markers */}
             {[167, 500, 833].map((x, i) => (
               <g key={x}>
-                <circle cx={x} cy={20} r={5} fill="var(--bg-primary)" stroke={['#00D4FF', '#7B2FFF', '#00FF88'][i]} strokeWidth="1.5" />
-                <circle cx={x} cy={20} r={2} fill={['#00D4FF', '#7B2FFF', '#00FF88'][i]} />
+                <circle cx={x} cy={20} r={5} fill="var(--bg-primary)" stroke={['#00BCD4', '#1E7BC4', '#10B981'][i]} strokeWidth="1.5" />
+                <circle cx={x} cy={20} r={2} fill={['#00BCD4', '#1E7BC4', '#10B981'][i]} />
               </g>
             ))}
 
             {/* Traveling dot */}
-            <circle r="5" fill="#00D4FF" filter="url(#dot-glow)">
+            <circle r="5" fill="#00BCD4" filter="url(#dot-glow)">
               <animateMotion
                 dur="5s"
                 repeatCount="indefinite"
@@ -629,7 +629,7 @@ export default function PillarsSection() {
               />
               <animate
                 attributeName="fill"
-                values="#00D4FF;#7B2FFF;#00FF88;#00D4FF"
+                values="#00BCD4;#1E7BC4;#10B981;#00BCD4"
                 keyTimes="0;0.4;0.7;1"
                 dur="5s"
                 repeatCount="indefinite"
@@ -644,7 +644,7 @@ export default function PillarsSection() {
             </circle>
 
             {/* Second trailing dot */}
-            <circle r="3" fill="#7B2FFF" filter="url(#dot-glow)" opacity="0.7">
+            <circle r="3" fill="#1E7BC4" filter="url(#dot-glow)" opacity="0.7">
               <animateMotion
                 dur="5s"
                 begin="2.5s"

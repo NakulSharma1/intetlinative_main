@@ -1,30 +1,29 @@
 import { useRef, useEffect } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
+import { useTheme } from '../../context/ThemeContext';
 
-// ─── Interfaces ───────────────────────────────────────────────────────────────
+// ─── Neural Network Canvas ────────────────────────────────────────────────────
 
-interface Node {
+interface CanvasNode {
   x: number; y: number; baseX: number; baseY: number;
-  radius: number; baseRadius: number; color: string; glowColor: string;
-  pulsePhase: number; pulseSpeed: number; vx: number; vy: number; connections: number[];
+  radius: number; baseRadius: number;
+  color: string; glowColor: string;
+  pulsePhase: number; pulseSpeed: number;
+  vx: number; vy: number; connections: number[];
 }
 
 interface Packet {
   fromNode: number; toNode: number; progress: number; speed: number; color: string;
 }
 
-interface DashboardRect {
-  x: number; y: number; width: number; height: number;
-  color: string; opacity: number; phase: number;
-}
-
-// ─── Neural Canvas ────────────────────────────────────────────────────────────
-
-function NeuralCanvas() {
+function NeuralCanvas({ isDark }: { isDark: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>(0);
+  const isDarkRef = useRef(isDark);
+
+  useEffect(() => { isDarkRef.current = isDark; }, [isDark]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -32,193 +31,112 @@ function NeuralCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const CYAN = '#00D4FF';
-    const VIOLET = '#7B2FFF';
-    const EMERALD = '#00FF88';
-    const COLORS = [CYAN, VIOLET, EMERALD];
-    const GLOW_COLORS = ['rgba(0,212,255,', 'rgba(123,47,255,', 'rgba(0,255,136,'];
-
     let width = 0, height = 0;
-    let nodes: Node[] = [];
+    let nodes: CanvasNode[] = [];
     let packets: Packet[] = [];
-    let dashboards: DashboardRect[] = [];
+
+    function getColors() {
+      return isDarkRef.current
+        ? { primary: '#00E5FF', secondary: '#1E7BC4', tertiary: '#00BCD4',
+            priRgb: '0,229,255', secRgb: '30,123,196', terRgb: '0,188,212' }
+        : { primary: '#7C3AED', secondary: '#4F46E5', tertiary: '#9333EA',
+            priRgb: '124,58,237', secRgb: '79,70,229', terRgb: '147,51,234' };
+    }
 
     function resize() {
       const rect = canvas.parentElement!.getBoundingClientRect();
-      width = rect.width;
-      height = rect.height;
-      canvas.width = width;
-      canvas.height = height;
+      width = rect.width; height = rect.height;
+      canvas.width = width; canvas.height = height;
       init();
     }
 
     function init() {
+      const c = getColors();
       nodes = []; packets = [];
-      for (let i = 0; i < 55; i++) {
+      const colorList = [c.primary, c.secondary, c.tertiary];
+      const glowList = [`rgba(${c.priRgb},`, `rgba(${c.secRgb},`, `rgba(${c.terRgb},`];
+      for (let i = 0; i < 48; i++) {
         const ci = Math.floor(Math.random() * 3);
         const bx = Math.random() * width;
         const by = Math.random() * height;
         nodes.push({
           x: bx, y: by, baseX: bx, baseY: by,
-          radius: 1.5 + Math.random() * 4,
-          baseRadius: 1.5 + Math.random() * 4,
-          color: COLORS[ci], glowColor: GLOW_COLORS[ci],
+          radius: 1.2 + Math.random() * 3,
+          baseRadius: 1.2 + Math.random() * 3,
+          color: colorList[ci], glowColor: glowList[ci],
           pulsePhase: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.018 + Math.random() * 0.028,
-          vx: (Math.random() - 0.5) * 0.12,
-          vy: (Math.random() - 0.5) * 0.12,
+          pulseSpeed: 0.015 + Math.random() * 0.022,
+          vx: (Math.random() - 0.5) * 0.09,
+          vy: (Math.random() - 0.5) * 0.09,
           connections: [],
         });
       }
       for (let i = 0; i < nodes.length; i++) {
-        const distances: { idx: number; d: number }[] = [];
-        for (let j = 0; j < nodes.length; j++) {
-          if (i === j) continue;
-          const dx = nodes[i].baseX - nodes[j].baseX;
-          const dy = nodes[i].baseY - nodes[j].baseY;
-          distances.push({ idx: j, d: Math.sqrt(dx * dx + dy * dy) });
-        }
-        distances.sort((a, b) => a.d - b.d);
-        nodes[i].connections = distances.slice(0, 2 + Math.floor(Math.random() * 3)).map(d => d.idx);
+        const dists = nodes.map((n, j) => {
+          if (i === j) return { idx: j, d: Infinity };
+          const dx = nodes[i].baseX - n.baseX, dy = nodes[i].baseY - n.baseY;
+          return { idx: j, d: Math.sqrt(dx*dx+dy*dy) };
+        }).sort((a,b) => a.d-b.d);
+        nodes[i].connections = dists.slice(0, 2 + Math.floor(Math.random()*2)).map(d=>d.idx);
       }
-      for (let p = 0; p < 18; p++) spawnPacket();
-      dashboards = [
-        { x: width * 0.05, y: height * 0.08, width: 160, height: 80, color: CYAN, opacity: 0.14, phase: 0 },
-        { x: width * 0.55, y: height * 0.12, width: 130, height: 65, color: VIOLET, opacity: 0.12, phase: 1.2 },
-        { x: width * 0.08, y: height * 0.74, width: 150, height: 72, color: EMERALD, opacity: 0.12, phase: 2.4 },
-        { x: width * 0.6, y: height * 0.70, width: 120, height: 55, color: CYAN, opacity: 0.10, phase: 0.8 },
-        { x: width * 0.28, y: height * 0.04, width: 95, height: 48, color: VIOLET, opacity: 0.10, phase: 1.8 },
-      ];
+      for (let p = 0; p < 14; p++) spawnPacket();
     }
 
     function spawnPacket() {
+      const c = getColors();
       const fromIdx = Math.floor(Math.random() * nodes.length);
       const node = nodes[fromIdx];
       if (!node.connections.length) return;
       const toIdx = node.connections[Math.floor(Math.random() * node.connections.length)];
-      packets.push({ fromNode: fromIdx, toNode: toIdx, progress: 0, speed: 0.004 + Math.random() * 0.008, color: node.color });
+      const colorList = [c.primary, c.secondary, c.tertiary];
+      packets.push({ fromNode: fromIdx, toNode: toIdx, progress: 0,
+        speed: 0.003 + Math.random() * 0.006,
+        color: colorList[Math.floor(Math.random()*3)] });
     }
 
     let t = 0;
 
-    function drawSphere(mx: number, my: number) {
-      const cx = width * 0.5 + mx * 0.15;
-      const cy = height * 0.5 + my * 0.12;
-      const R = Math.min(width, height) * 0.38;
-
-      // Central glow
-      const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.65);
-      grd.addColorStop(0, 'rgba(0,212,255,0.07)');
-      grd.addColorStop(0.45, 'rgba(123,47,255,0.04)');
-      grd.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(cx, cy, R * 0.65, 0, Math.PI * 2);
-      ctx.fillStyle = grd; ctx.fill();
-
-      // Latitude lines
-      for (let i = -4; i <= 4; i++) {
-        const lat = i / 4;
-        const latR = R * Math.sqrt(Math.max(0, 1 - lat * lat));
-        const latY = cy + R * lat;
-        const alpha = 0.035 + 0.015 * (1 - Math.abs(lat));
-        ctx.beginPath();
-        ctx.ellipse(cx, latY, latR, latR * 0.22, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(0,212,255,${alpha})`;
-        ctx.lineWidth = 0.5; ctx.stroke();
-      }
-
-      // Longitude lines (slowly rotating)
-      for (let i = 0; i < 6; i++) {
-        const angle = (i / 6) * Math.PI + t * 0.06;
-        ctx.save();
-        ctx.translate(cx, cy); ctx.rotate(angle);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, R * 0.2, R, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(123,47,255,0.04)';
-        ctx.lineWidth = 0.5; ctx.stroke();
-        ctx.restore();
-      }
-
-      // Sphere outline
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(0,212,255,0.05)';
-      ctx.lineWidth = 1; ctx.stroke();
-
-      // Orbit ring 1 — equatorial, cyan
-      const ang1 = t * 0.22;
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang1); ctx.scale(1, 0.22);
-      ctx.beginPath(); ctx.arc(0, 0, R * 1.12, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(0,212,255,0.22)'; ctx.lineWidth = 1.2; ctx.stroke();
-      ctx.restore();
-      // dot on orbit 1
-      const d1x = cx + Math.cos(ang1) * R * 1.12;
-      const d1y = cy + Math.sin(ang1) * R * 1.12 * 0.22;
-      ctx.shadowColor = '#00D4FF'; ctx.shadowBlur = 12;
-      ctx.beginPath(); ctx.arc(d1x, d1y, 2.8, 0, Math.PI * 2);
-      ctx.fillStyle = '#00D4FF'; ctx.fill(); ctx.shadowBlur = 0;
-
-      // Orbit ring 2 — inclined, violet
-      const ang2 = -t * 0.16 + Math.PI * 0.4;
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(Math.PI * 0.3); ctx.scale(0.75, 0.25);
-      ctx.beginPath(); ctx.arc(0, 0, R * 1.28, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(123,47,255,0.16)'; ctx.lineWidth = 1; ctx.stroke();
-      ctx.restore();
-      // dot on orbit 2
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(Math.PI * 0.3);
-      const d2x = Math.cos(ang2) * R * 1.28 * 0.75;
-      const d2y = Math.sin(ang2) * R * 1.28 * 0.25;
-      ctx.shadowColor = '#7B2FFF'; ctx.shadowBlur = 10;
-      ctx.beginPath(); ctx.arc(d2x, d2y, 2.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#7B2FFF'; ctx.fill(); ctx.shadowBlur = 0;
-      ctx.restore();
-
-      // Orbit ring 3 — emerald, different angle
-      const ang3 = t * 0.32 + Math.PI * 0.7;
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-Math.PI * 0.22); ctx.scale(0.55, 0.28);
-      ctx.beginPath(); ctx.arc(0, 0, R * 0.88, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(0,255,136,0.13)'; ctx.lineWidth = 1; ctx.stroke();
-      ctx.restore();
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-Math.PI * 0.22);
-      const d3x = Math.cos(ang3) * R * 0.88 * 0.55;
-      const d3y = Math.sin(ang3) * R * 0.88 * 0.28;
-      ctx.shadowColor = '#00FF88'; ctx.shadowBlur = 8;
-      ctx.beginPath(); ctx.arc(d3x, d3y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = '#00FF88'; ctx.fill(); ctx.shadowBlur = 0;
-      ctx.restore();
-    }
-
-    function drawGlow(x: number, y: number, r: number, glowColor: string, solidColor: string) {
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 4);
-      grad.addColorStop(0, glowColor + '0.6)');
-      grad.addColorStop(0.4, glowColor + '0.15)');
-      grad.addColorStop(1, glowColor + '0)');
-      ctx.beginPath(); ctx.arc(x, y, r * 4, 0, Math.PI * 2);
-      ctx.fillStyle = grad; ctx.fill();
-      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = solidColor; ctx.fill();
-    }
-
     function tick() {
-      t += 0.016;
+      t += 0.014;
+      const dark = isDarkRef.current;
       ctx.clearRect(0, 0, width, height);
 
-      const mx = (mouseRef.current.x / window.innerWidth - 0.5) * 18;
-      const my = (mouseRef.current.y / window.innerHeight - 0.5) * 12;
+      const mx = (mouseRef.current.x / window.innerWidth - 0.5) * 14;
+      const my = (mouseRef.current.y / window.innerHeight - 0.5) * 9;
+      const c = getColors();
 
-      drawSphere(mx, my);
+      // Central ambient orb
+      const cx = width * 0.5 + mx * 0.1;
+      const cy = height * 0.5 + my * 0.08;
+      const R = Math.min(width, height) * 0.32;
+      const orb = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+      orb.addColorStop(0, dark ? `rgba(${c.priRgb},0.06)` : `rgba(${c.priRgb},0.04)`);
+      orb.addColorStop(1, 'transparent');
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
+      ctx.fillStyle = orb; ctx.fill();
 
+      // Orbit ring
+      const ang = t * 0.18;
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang); ctx.scale(1, 0.25);
+      ctx.beginPath(); ctx.arc(0, 0, R*1.1, 0, Math.PI*2);
+      ctx.strokeStyle = dark ? `rgba(${c.secRgb},0.18)` : `rgba(${c.secRgb},0.12)`;
+      ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+
+      // Nodes
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         n.baseX += n.vx; n.baseY += n.vy;
-        if (n.baseX < -20) n.baseX = width + 20;
-        if (n.baseX > width + 20) n.baseX = -20;
-        if (n.baseY < -20) n.baseY = height + 20;
-        if (n.baseY > height + 20) n.baseY = -20;
-        n.x = n.baseX + mx * (n.baseRadius / 7);
-        n.y = n.baseY + my * (n.baseRadius / 7);
+        if (n.baseX < -20) n.baseX = width+20;
+        if (n.baseX > width+20) n.baseX = -20;
+        if (n.baseY < -20) n.baseY = height+20;
+        if (n.baseY > height+20) n.baseY = -20;
+        n.x = n.baseX + mx * (n.baseRadius / 8);
+        n.y = n.baseY + my * (n.baseRadius / 8);
         n.pulsePhase += n.pulseSpeed;
-        n.radius = n.baseRadius + Math.sin(n.pulsePhase) * n.baseRadius * 0.4;
+        n.radius = n.baseRadius + Math.sin(n.pulsePhase) * n.baseRadius * 0.35;
       }
 
+      // Edges
       const drawn = new Set<string>();
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
@@ -227,64 +145,52 @@ function NeuralCanvas() {
           if (drawn.has(key)) continue;
           drawn.add(key);
           const m = nodes[j];
-          const dx = n.x - m.x, dy = n.y - m.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const alpha = Math.max(0, 0.22 - dist / 1200);
+          const dx = n.x-m.x, dy = n.y-m.y;
+          const dist = Math.sqrt(dx*dx+dy*dy);
+          const base = dark ? 0.18 : 0.10;
+          const alpha = Math.max(0, base - dist/1400);
           if (alpha <= 0) continue;
           ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(m.x, m.y);
-          ctx.strokeStyle = `rgba(${n.color === CYAN ? '0,212,255' : n.color === VIOLET ? '123,47,255' : '0,255,136'},${alpha})`;
-          ctx.lineWidth = 0.6; ctx.stroke();
+          const rgb = n.color === c.primary ? c.priRgb : n.color === c.secondary ? c.secRgb : c.terRgb;
+          ctx.strokeStyle = `rgba(${rgb},${alpha})`;
+          ctx.lineWidth = 0.5; ctx.stroke();
         }
       }
 
-      for (const db of dashboards) {
-        const pulse = 0.5 + 0.5 * Math.sin(t * 0.8 + db.phase);
-        const op = db.opacity * (0.7 + 0.3 * pulse);
-        const rx = db.x + mx * 0.3, ry = db.y + my * 0.3;
-        ctx.save(); ctx.globalAlpha = op;
-        ctx.shadowColor = db.color; ctx.shadowBlur = 10 * pulse;
-        ctx.strokeStyle = db.color; ctx.lineWidth = 1;
-        ctx.strokeRect(rx, ry, db.width, db.height);
-        ctx.globalAlpha = op * 0.35; ctx.lineWidth = 0.5;
-        const lineY = ry + 10 + ((t * 28) % (db.height - 10));
-        ctx.beginPath(); ctx.moveTo(rx + 4, lineY); ctx.lineTo(rx + db.width - 4, lineY); ctx.stroke();
-        ctx.globalAlpha = op * 0.8; ctx.lineWidth = 1.5;
-        const cs = 7;
-        ctx.beginPath(); ctx.moveTo(rx, ry + cs); ctx.lineTo(rx, ry); ctx.lineTo(rx + cs, ry); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(rx + db.width - cs, ry); ctx.lineTo(rx + db.width, ry); ctx.lineTo(rx + db.width, ry + cs); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(rx, ry + db.height - cs); ctx.lineTo(rx, ry + db.height); ctx.lineTo(rx + cs, ry + db.height); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(rx + db.width - cs, ry + db.height); ctx.lineTo(rx + db.width, ry + db.height); ctx.lineTo(rx + db.width, ry + db.height - cs); ctx.stroke();
-        ctx.restore(); ctx.shadowBlur = 0;
-      }
-
+      // Node dots
       for (const n of nodes) {
-        ctx.shadowColor = n.color; ctx.shadowBlur = n.radius * 3;
-        drawGlow(n.x, n.y, n.radius, n.glowColor, n.color);
-        ctx.shadowBlur = 0;
+        const rgb = n.color === c.primary ? c.priRgb : n.color === c.secondary ? c.secRgb : c.terRgb;
+        const glowR = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius*4);
+        glowR.addColorStop(0, n.glowColor + (dark ? '0.5)' : '0.3)'));
+        glowR.addColorStop(1, n.glowColor + '0)');
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.radius*4, 0, Math.PI*2);
+        ctx.fillStyle = glowR; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.radius, 0, Math.PI*2);
+        ctx.fillStyle = n.color; ctx.fill();
       }
 
+      // Packets
       const dead: number[] = [];
       for (let p = 0; p < packets.length; p++) {
         const pk = packets[p];
         pk.progress += pk.speed;
         if (pk.progress >= 1) { dead.push(p); spawnPacket(); continue; }
         const from = nodes[pk.fromNode], to = nodes[pk.toNode];
-        const px = from.x + (to.x - from.x) * pk.progress;
-        const py = from.y + (to.y - from.y) * pk.progress;
-        ctx.shadowColor = pk.color; ctx.shadowBlur = 6;
-        ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = pk.color; ctx.fill(); ctx.shadowBlur = 0;
-        const trail = Math.max(0, pk.progress - 0.05);
+        const px2 = from.x + (to.x - from.x) * pk.progress;
+        const py2 = from.y + (to.y - from.y) * pk.progress;
+        ctx.beginPath(); ctx.arc(px2, py2, 2, 0, Math.PI*2);
+        ctx.fillStyle = pk.color; ctx.fill();
+        const trail = Math.max(0, pk.progress - 0.06);
         const tx2 = from.x + (to.x - from.x) * trail;
         const ty2 = from.y + (to.y - from.y) * trail;
-        const trailGrad = ctx.createLinearGradient(tx2, ty2, px, py);
-        const rgb = pk.color === CYAN ? '0,212,255' : pk.color === VIOLET ? '123,47,255' : '0,255,136';
-        trailGrad.addColorStop(0, `rgba(${rgb},0)`);
-        trailGrad.addColorStop(1, `rgba(${rgb},0.5)`);
-        ctx.beginPath(); ctx.moveTo(tx2, ty2); ctx.lineTo(px, py);
-        ctx.strokeStyle = trailGrad; ctx.lineWidth = 1.5; ctx.stroke();
+        const tg = ctx.createLinearGradient(tx2, ty2, px2, py2);
+        const rgb = pk.color === c.primary ? c.priRgb : pk.color === c.secondary ? c.secRgb : c.terRgb;
+        tg.addColorStop(0, `rgba(${rgb},0)`);
+        tg.addColorStop(1, `rgba(${rgb},0.45)`);
+        ctx.beginPath(); ctx.moveTo(tx2, ty2); ctx.lineTo(px2, py2);
+        ctx.strokeStyle = tg; ctx.lineWidth = 1.2; ctx.stroke();
       }
-      for (let d = dead.length - 1; d >= 0; d--) packets.splice(dead[d], 1);
+      for (let d = dead.length-1; d >= 0; d--) packets.splice(dead[d], 1);
       rafRef.current = requestAnimationFrame(tick);
     }
 
@@ -302,79 +208,65 @@ function NeuralCanvas() {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const TRUST_BADGES = ['AI Driven', 'Cloud Native', 'Secure by Design', 'Enterprise Ready'];
-const BADGE_COLORS: Record<string, string> = {
-  'AI Driven': '#00FF88', 'Cloud Native': '#00D4FF',
-  'Secure by Design': '#7B2FFF', 'Enterprise Ready': '#00D4FF',
-};
-
 const PARTNERS = [
-  { name: 'CNCF', color: '#00D4FF' },
-  { name: 'AWS Partner', color: '#FF9D00' },
-  { name: 'Google Cloud', color: '#00FF88' },
-  { name: 'HashiCorp', color: '#7B2FFF' },
+  { name: 'AWS', color: '#F59E0B' },
+  { name: 'Google Cloud', color: '#10B981' },
+  { name: 'CNCF', color: '#00BCD4' },
+  { name: 'HashiCorp', color: '#1E7BC4' },
 ];
 
 const TECH_TICKER = [
   'Kubernetes', 'Istio', 'Cilium', 'eBPF', 'Prometheus', 'OpenTelemetry',
   'Terraform', 'ArgoCD', 'HashiCorp Vault', 'Falco', 'OPA', 'Crossplane',
-  'Grafana', 'Loki', 'Jaeger', 'Helm', 'Kyverno', 'FluxCD', 'Argo Rollouts',
+  'Grafana', 'Loki', 'Jaeger', 'Helm', 'Kyverno', 'FluxCD',
 ];
 
+// ─── Floating Metric Card ─────────────────────────────────────────────────────
 
-// ─── Floating Card ────────────────────────────────────────────────────────────
-
-interface FloatingCardProps {
+interface MetricCardProps {
   top?: string; bottom?: string; left?: string; right?: string;
-  glow: string; glowRgb: string; delay: number;
-  icon: React.ReactNode; title: string; subtitle: string;
-  alert?: boolean; sparkData?: number[];
+  color: string; colorRgb: string; delay: number;
+  label: string; value: string; sub: string; live?: boolean;
+  bars?: number[];
 }
 
-function FloatingCard({ top, bottom, left, right, glow, glowRgb, delay, icon, title, subtitle, alert, sparkData }: FloatingCardProps) {
+function MetricCard({ top, bottom, left, right, color, colorRgb, delay, label, value, sub, live, bars }: MetricCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
       style={{
         position: 'absolute', top, bottom, left, right, zIndex: 20,
-        background: 'var(--glass-bg, rgba(5,8,16,0.75))',
-        border: `1px solid ${glow}4D`, borderRadius: '14px',
-        backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
-        padding: '12px 16px', minWidth: '190px',
-        boxShadow: `0 0 28px ${glow}20, 0 2px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)`,
-        animation: 'heroFloat 4s ease-in-out infinite',
-        animationDelay: `${delay * 0.6}s`,
+        background: 'var(--glass-bg)',
+        border: `1px solid rgba(${colorRgb},0.22)`,
+        borderRadius: '16px',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        padding: '14px 18px',
+        minWidth: '188px',
+        boxShadow: `0 0 32px rgba(${colorRgb},0.12), 0 4px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.06)`,
+        animation: 'heroFloat 4.5s ease-in-out infinite',
+        animationDelay: `${delay * 0.5}s`,
       }}
     >
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '26px', height: '26px', borderRadius: '8px', background: `${glow}18`, flexShrink: 0 }}>
-          <span style={{ color: glow, display: 'flex', alignItems: 'center' }}>{icon}</span>
-        </div>
-        {alert && (
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginLeft: 'auto', fontSize: '0.6rem', color: glow, fontFamily: 'var(--font-body, Inter)', letterSpacing: '0.06em' }}>
-            <span style={{ display: 'inline-block', width: '5px', height: '5px', borderRadius: '50%', background: glow, boxShadow: `0 0 6px 2px ${glow}`, animation: 'pulse 1.4s ease-in-out infinite' }} />
-            LIVE
-          </span>
-        )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: color, boxShadow: `0 0 8px ${color}`, display: 'inline-block', animation: live ? 'glow-pulse 1.6s ease-in-out infinite' : 'none' }} />
+        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em', textTransform: 'uppercase', flex: 1 }}>
+          {label}
+        </span>
+        {live && <span style={{ fontSize: '0.58rem', color, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>LIVE</span>}
       </div>
-      <div style={{ color: 'var(--text-primary)', fontSize: '0.82rem', fontWeight: 700, fontFamily: 'var(--font-display, Space Grotesk)', lineHeight: 1.2, marginBottom: '2px' }}>
-        {title}
+      <div style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'var(--font-display)', lineHeight: 1.1, marginBottom: '3px' }}>
+        {value}
       </div>
-      <div style={{ color: `rgba(${glowRgb},0.72)`, fontSize: '0.68rem', fontFamily: 'var(--font-body, Inter)', marginBottom: sparkData ? '8px' : 0 }}>
-        {subtitle}
+      <div style={{ fontSize: '0.68rem', color: `rgba(${colorRgb},0.7)`, fontFamily: 'var(--font-body)' }}>
+        {sub}
       </div>
-      {/* Sparkline bars */}
-      {sparkData && (
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '22px' }}>
-          {sparkData.map((v, i) => (
-            <div key={i} style={{
-              flex: 1, height: `${v}%`, borderRadius: '2px',
-              background: `rgba(${glowRgb},${0.25 + (i / sparkData.length) * 0.55})`,
-              transition: 'height 0.3s ease',
-            }} />
+      {bars && (
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '20px', marginTop: '10px' }}>
+          {bars.map((v, i) => (
+            <div key={i} style={{ flex: 1, height: `${v}%`, borderRadius: '2px', background: `rgba(${colorRgb},${0.2 + (i / bars.length) * 0.6})` }} />
           ))}
         </div>
       )}
@@ -382,261 +274,359 @@ function FloatingCard({ top, bottom, left, right, glow, glowRgb, delay, icon, ti
   );
 }
 
-// ─── Motion variants ──────────────────────────────────────────────────────────
+// ─── Animation variants ────────────────────────────────────────────────────────
 
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } };
+const item = {
+  hidden: { opacity: 0, y: 24, filter: 'blur(4px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] } },
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 32, filter: 'blur(6px)' },
-  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] } },
-};
-
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function HeroSection() {
+  const { isDark } = useTheme();
+
   return (
     <>
       <style>{`
         @keyframes heroFloat {
           0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
+          50% { transform: translateY(-7px); }
         }
-        @keyframes blobDrift1 {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          30% { transform: translate(50px, -35px) scale(1.07); }
-          70% { transform: translate(-25px, 22px) scale(0.95); }
+        @keyframes blobA {
+          0%, 100% { transform: translate(0,0) scale(1); }
+          35% { transform: translate(45px,-30px) scale(1.06); }
+          70% { transform: translate(-20px,18px) scale(0.96); }
         }
-        @keyframes blobDrift2 {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          40% { transform: translate(-40px, 50px) scale(1.1); }
-          75% { transform: translate(30px, -18px) scale(0.93); }
+        @keyframes blobB {
+          0%, 100% { transform: translate(0,0) scale(1); }
+          40% { transform: translate(-35px,42px) scale(1.08); }
+          75% { transform: translate(24px,-14px) scale(0.94); }
         }
-        @keyframes blobDrift3 {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          50% { transform: translate(35px, -28px) scale(1.08); }
-        }
-        @keyframes tickerMove {
+        @keyframes tickerScroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes borderPulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
+        @keyframes shimmerText {
+          0%   { background-position: -200% center; }
+          100% { background-position:  200% center; }
         }
       `}</style>
 
-      <section className="relative flex flex-col overflow-hidden md:min-h-screen" style={{ background: 'var(--bg-primary, #050810)' }}>
+      <section
+        className="relative flex flex-col overflow-hidden md:min-h-screen"
+        style={{ background: 'var(--bg-primary)' }}
+      >
+        {/* ── Ambient glow blobs ── */}
+        <div style={{
+          position: 'absolute', top: '-18%', right: '5%',
+          width: '700px', height: '700px', borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(0,229,255,0.09) 0%, transparent 65%)'
+            : 'radial-gradient(circle, rgba(79,70,229,0.12) 0%, transparent 65%)',
+          animation: 'blobA 12s ease-in-out infinite',
+          pointerEvents: 'none', zIndex: 0, filter: 'blur(40px)',
+        }} />
+        <div style={{
+          position: 'absolute', top: '20%', left: '-8%',
+          width: '600px', height: '600px', borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(30,123,196,0.08) 0%, transparent 65%)'
+            : 'radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 65%)',
+          animation: 'blobB 15s ease-in-out infinite',
+          pointerEvents: 'none', zIndex: 0, filter: 'blur(60px)',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '8%', right: '20%',
+          width: '500px', height: '500px', borderRadius: '50%',
+          background: isDark
+            ? 'radial-gradient(circle, rgba(0,188,212,0.07) 0%, transparent 65%)'
+            : 'radial-gradient(circle, rgba(147,51,234,0.08) 0%, transparent 65%)',
+          animation: 'blobA 18s ease-in-out infinite reverse',
+          pointerEvents: 'none', zIndex: 0, filter: 'blur(60px)',
+        }} />
 
-        {/* ── Ambient blobs ── */}
-        <div style={{
-          position: 'absolute', top: '-15%', right: '8%', width: '680px', height: '680px',
-          borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 65%)',
-          animation: 'blobDrift1 10s ease-in-out infinite', pointerEvents: 'none', zIndex: 0,
-        }} />
-        <div style={{
-          position: 'absolute', top: '15%', left: '-6%', width: '580px', height: '580px',
-          borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,47,255,0.11) 0%, transparent 65%)',
-          animation: 'blobDrift2 13s ease-in-out infinite', pointerEvents: 'none', zIndex: 0,
-        }} />
-        <div style={{
-          position: 'absolute', bottom: '5%', right: '22%', width: '460px', height: '460px',
-          borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 65%)',
-          animation: 'blobDrift3 16s ease-in-out infinite', pointerEvents: 'none', zIndex: 0,
-        }} />
-
-        {/* Hex grid */}
+        {/* ── Dot grid texture ── */}
         <div className="absolute inset-0 z-0 pointer-events-none" style={{
-          opacity: 0.03,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='69' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='30,1 59,16.5 59,52.5 30,68 1,52.5 1,16.5' fill='none' stroke='%2300D4FF' stroke-width='0.6'/%3E%3C/svg%3E")`,
-          backgroundSize: '60px 69px',
+          opacity: isDark ? 0.025 : 0.06,
+          backgroundImage: `radial-gradient(circle, ${isDark ? '#00BCD4' : '#7C3AED'} 1px, transparent 1px)`,
+          backgroundSize: '32px 32px',
         }} />
 
-        {/* Center-left bloom */}
-        <div className="absolute inset-0 z-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 65% 65% at 26% 50%, rgba(123,47,255,0.09) 0%, rgba(0,212,255,0.04) 42%, transparent 70%)',
-        }} />
-
-        {/* NeuralCanvas — full-bleed background on desktop */}
+        {/* ── Neural canvas (desktop) ── */}
         <div className="hidden md:block absolute inset-0 z-[1] overflow-hidden" style={{ pointerEvents: 'none' }}>
-          <NeuralCanvas />
+          <NeuralCanvas isDark={isDark} />
         </div>
-        {/* Left-to-right gradient — keeps text readable over canvas */}
-        <div
-          className="hidden md:block absolute inset-0 z-[2] pointer-events-none"
-          style={{ background: 'linear-gradient(to right, var(--bg-primary) 40%, transparent 80%)' }}
+        {/* Fade canvas edges for text legibility */}
+        <div className="hidden md:block absolute inset-0 z-[2] pointer-events-none"
+          style={{ background: `linear-gradient(to right, var(--bg-primary) 38%, transparent 75%)` }}
+        />
+        <div className="hidden md:block absolute inset-0 z-[2] pointer-events-none"
+          style={{ background: `linear-gradient(to bottom, transparent 60%, var(--bg-primary) 100%)` }}
         />
 
-        {/* ── Main hero content ── */}
-        <div className="relative z-10 flex flex-1 min-h-0 flex-col md:flex-row md:min-h-[calc(100vh-60px)]">
+        {/* ── Main content ── */}
+        <div className="relative z-10 flex flex-1 flex-col md:flex-row md:min-h-[calc(100vh-56px)]">
 
-          {/* LEFT */}
-          <div className="relative flex items-center w-full md:w-1/2 px-5 pt-10 pb-12 md:pl-16 md:pr-10 md:py-24">
-            <motion.div variants={containerVariants} initial="hidden" animate="show" className="max-w-[580px]">
+          {/* LEFT column */}
+          <div className="relative flex items-center w-full md:w-[52%] px-6 pt-12 pb-14 md:pl-16 md:pr-8 md:py-28">
+            <motion.div variants={container} initial="hidden" animate="show" className="max-w-[560px] w-full">
 
-              {/* Badge */}
-              <motion.div variants={itemVariants} className="mb-7">
-                <span className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-sm tracking-wide" style={{
-                  background: 'rgba(0,255,136,0.07)',
-                  border: '1px solid rgba(0,255,136,0.25)',
-                  color: '#8A9BB5',
-                  fontFamily: 'var(--font-body, Inter)',
-                  animation: 'borderPulse 3s ease-in-out infinite',
-                }}>
-                  <span className="inline-block w-2 h-2 rounded-full" style={{ background: '#00FF88', boxShadow: '0 0 10px 3px rgba(0,255,136,0.6)', animation: 'pulse 2s cubic-bezier(0.4,0,0.6,1) infinite' }} />
+              {/* Live badge */}
+              <motion.div variants={item} className="mb-8">
+                <span
+                  className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full text-sm font-medium"
+                  style={{
+                    background: isDark ? 'rgba(0,229,255,0.07)' : 'rgba(79,70,229,0.07)',
+                    border: `1px solid ${isDark ? 'rgba(0,229,255,0.22)' : 'rgba(79,70,229,0.25)'}`,
+                    color: isDark ? '#00E5FF' : '#4F46E5',
+                    fontFamily: 'var(--font-body)',
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '7px', height: '7px', borderRadius: '50%',
+                      background: '#10B981',
+                      boxShadow: '0 0 8px rgba(16,185,129,0.7)',
+                      display: 'inline-block',
+                      animation: 'glow-pulse 2s ease-in-out infinite',
+                    }}
+                  />
                   AI-Native Platform Engineering
                 </span>
               </motion.div>
 
               {/* Headline */}
-              <motion.h1 variants={itemVariants} className="mb-7 leading-[1.0]" style={{ fontFamily: 'var(--font-display, Space Grotesk)' }}>
-                <span className="block" style={{ fontSize: 'clamp(40px, 10vw, 108px)', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              <motion.h1
+                variants={item}
+                className="mb-7"
+                style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.03em' }}
+              >
+                <span
+                  className="block"
+                  style={{
+                    fontSize: 'clamp(42px, 9vw, 96px)',
+                    fontWeight: 700,
+                    color: 'var(--text-primary)',
+                    lineHeight: 1.0,
+                  }}
+                >
                   Engineering
                 </span>
-                <span className="block" style={{
-                  fontSize: 'clamp(40px, 10vw, 108px)', fontWeight: 700, letterSpacing: '-0.02em',
-                  background: 'linear-gradient(130deg, #7B2FFF 0%, #00D4FF 55%, #00FF88 100%)',
-                  backgroundSize: '200% auto',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                  animation: 'shimmer 6s linear infinite',
-                }}>
+                <span
+                  className="block"
+                  style={{
+                    fontSize: 'clamp(42px, 9vw, 96px)',
+                    fontWeight: 700,
+                    lineHeight: 1.0,
+                    background: isDark
+                      ? 'linear-gradient(130deg, #00E5FF 0%, #00BCD4 45%, #1E7BC4 100%)'
+                      : 'linear-gradient(130deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%)',
+                    backgroundSize: '200% auto',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    animation: 'shimmerText 7s linear infinite',
+                  }}
+                >
                   Intelligence.
                 </span>
-                <span className="block" style={{ fontSize: 'clamp(28px, 7vw, 76px)', fontWeight: 500, letterSpacing: '-0.01em', color: 'var(--text-secondary)' }}>
+                <span
+                  className="block"
+                  style={{
+                    fontSize: 'clamp(28px, 6vw, 66px)',
+                    fontWeight: 400,
+                    lineHeight: 1.1,
+                    color: 'var(--text-muted)',
+                    letterSpacing: '-0.01em',
+                    marginTop: '4px',
+                  }}
+                >
                   Built Native.
                 </span>
               </motion.h1>
 
-              {/* Subtext */}
-              <motion.p variants={itemVariants} className="mb-8 leading-relaxed" style={{ color: '#8A9BB5', fontSize: '1.05rem', fontFamily: 'var(--font-body, Inter)', maxWidth: '460px' }}>
-                Cloud-native platforms, AI-driven operations, and enterprise engineering designed for modern digital infrastructure.
+              {/* Sub */}
+              <motion.p
+                variants={item}
+                className="mb-8"
+                style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: '1.05rem',
+                  lineHeight: 1.75,
+                  fontFamily: 'var(--font-body)',
+                  maxWidth: '440px',
+                }}
+              >
+                Cloud-native platforms, AI-driven operations, and enterprise
+                infrastructure designed to scale without limits.
               </motion.p>
 
               {/* Partner chips */}
-              <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-2 mb-8">
-                <span style={{ color: '#4A5568', fontSize: '0.72rem', fontFamily: 'var(--font-body, Inter)', letterSpacing: '0.05em', textTransform: 'uppercase', marginRight: '4px' }}>
+              <motion.div variants={item} className="flex flex-wrap items-center gap-2 mb-9">
+                <span style={{
+                  color: 'var(--text-faint)', fontSize: '0.7rem', fontFamily: 'var(--font-body)',
+                  letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: '2px',
+                }}>
                   Trusted partner of
                 </span>
-                {PARTNERS.map((p) => (
+                {PARTNERS.map(p => (
                   <span key={p.name} style={{
                     display: 'inline-flex', alignItems: 'center', gap: '5px',
                     padding: '3px 10px', borderRadius: '100px',
-                    background: `${p.color}0E`, border: `1px solid ${p.color}28`,
-                    color: p.color, fontSize: '0.7rem', fontWeight: 600,
-                    fontFamily: 'var(--font-body, Inter)', letterSpacing: '0.02em',
+                    background: isDark ? `rgba(${p.color === '#F59E0B' ? '245,158,11' : p.color === '#10B981' ? '16,185,129' : p.color === '#22D3EE' ? '34,211,238' : '124,58,237'},0.08)` : `rgba(${p.color === '#F59E0B' ? '245,158,11' : p.color === '#10B981' ? '16,185,129' : p.color === '#22D3EE' ? '34,211,238' : '124,58,237'},0.06)`,
+                    border: `1px solid ${p.color}30`,
+                    color: p.color, fontSize: '0.68rem', fontWeight: 600,
+                    fontFamily: 'var(--font-body)',
                   }}>
-                    <span style={{ display: 'inline-block', width: '4px', height: '4px', borderRadius: '50%', background: p.color, flexShrink: 0 }} />
+                    <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: p.color, display: 'inline-block', flexShrink: 0 }} />
                     {p.name}
                   </span>
                 ))}
               </motion.div>
 
               {/* CTAs */}
-              <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-4 mb-8">
-                <Link to="/contact"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold transition-transform hover:scale-[1.04] active:scale-[0.98]"
+              <motion.div variants={item} className="flex flex-wrap items-center gap-4">
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2.5 font-semibold transition-all duration-200"
                   style={{
-                    background: 'linear-gradient(135deg, #00FF88 0%, #00D4FF 100%)', color: '#050810',
-                    fontFamily: 'var(--font-body, Inter)', fontSize: '0.95rem',
-                    boxShadow: '0 0 36px rgba(0,255,136,0.28), 0 4px 28px rgba(0,212,255,0.18)',
+                    padding: '13px 28px',
+                    borderRadius: '14px',
+                    background: isDark
+                      ? 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)'
+                      : 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%)',
+                    color: isDark ? '#050F1F' : '#ffffff',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.95rem',
+                    boxShadow: isDark
+                      ? '0 0 32px rgba(0,200,230,0.35), 0 4px 16px rgba(0,200,230,0.20)'
+                      : '0 0 32px rgba(79,70,229,0.30), 0 4px 16px rgba(79,70,229,0.18)',
+                    textDecoration: 'none',
                   }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 56px rgba(0,255,136,0.45), 0 4px 36px rgba(0,212,255,0.3)'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = '0 0 36px rgba(0,255,136,0.28), 0 4px 28px rgba(0,212,255,0.18)'; }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.boxShadow = isDark
+                      ? '0 0 48px rgba(0,200,230,0.50), 0 4px 24px rgba(0,200,230,0.30)'
+                      : '0 0 48px rgba(79,70,229,0.45), 0 4px 24px rgba(124,58,237,0.28)';
+                    el.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.boxShadow = isDark
+                      ? '0 0 32px rgba(0,200,230,0.35), 0 4px 16px rgba(0,200,230,0.20)'
+                      : '0 0 32px rgba(79,70,229,0.30), 0 4px 16px rgba(79,70,229,0.18)';
+                    el.style.transform = 'translateY(0)';
+                  }}
                 >
                   Start Building
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M1 7h12M8 2l5 5-5 5" stroke="#050810" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M1 7h12M8 2l5 5-5 5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </Link>
-                <Link to="/services"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-medium transition-all hover:scale-[1.03] active:scale-[0.98]"
-                  style={{ color: '#8A9BB5', fontFamily: 'var(--font-body, Inter)', fontSize: '0.95rem', background: 'rgba(128,128,128,0.05)', border: '1px solid rgba(128,128,128,0.15)', backdropFilter: 'blur(8px)' }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)'; (e.currentTarget as HTMLElement).style.border = '1px solid rgba(128,128,128,0.3)'; (e.currentTarget as HTMLElement).style.background = 'rgba(128,128,128,0.1)'; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#8A9BB5'; (e.currentTarget as HTMLElement).style.border = '1px solid rgba(128,128,128,0.15)'; (e.currentTarget as HTMLElement).style.background = 'rgba(128,128,128,0.05)'; }}
+                <Link
+                  to="/services"
+                  className="inline-flex items-center gap-2 font-medium transition-all duration-200"
+                  style={{
+                    padding: '12px 24px',
+                    borderRadius: '14px',
+                    border: '1px solid var(--glass-border-bright)',
+                    color: 'var(--text-secondary)',
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '0.95rem',
+                    background: 'var(--glass-bg)',
+                    backdropFilter: 'blur(12px)',
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = 'var(--text-primary)';
+                    el.style.borderColor = isDark ? 'rgba(0,200,230,0.35)' : 'rgba(79,70,229,0.40)';
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.color = 'var(--text-secondary)';
+                    el.style.borderColor = 'var(--glass-border-bright)';
+                  }}
                 >
                   Explore Platform
                 </Link>
               </motion.div>
 
-              {/* Trust micro-badges */}
-              <motion.div variants={itemVariants} className="flex flex-wrap gap-2.5 mb-7">
-                {TRUST_BADGES.map((badge) => {
-                  const color = BADGE_COLORS[badge];
-                  const rgb = color === '#00FF88' ? '0,255,136' : color === '#00D4FF' ? '0,212,255' : '123,47,255';
-                  return (
-                    <span key={badge} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs" style={{ background: `rgba(${rgb},0.07)`, border: `1px solid rgba(${rgb},0.18)`, color: '#8A9BB5', fontFamily: 'var(--font-body, Inter)' }}>
-                      <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ background: color }} />
-                      {badge}
-                    </span>
-                  );
-                })}
-              </motion.div>
-
             </motion.div>
 
             {/* Scroll hint */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8, duration: 0.8 }}
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 0.8 }}
               className="hidden md:flex"
-              style={{ position: 'absolute', bottom: '36px', left: '64px', flexDirection: 'column', alignItems: 'center', gap: '6px' }}
+              style={{ position: 'absolute', bottom: '32px', left: '64px', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
             >
-              <span style={{ color: '#8A9BB5', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: 'var(--font-body, Inter)', opacity: 0.5 }}>Scroll to explore</span>
-              <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }} style={{ opacity: 0.45, color: '#8A9BB5' }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <span style={{ color: 'var(--text-faint)', fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: 'var(--font-body)' }}>
+                Scroll
+              </span>
+              <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }} style={{ color: 'var(--text-faint)' }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </motion.div>
             </motion.div>
           </div>
 
-          {/* RIGHT — Floating Cards (hidden on mobile; canvas is absolute background) */}
-          <div className="hidden md:block relative md:w-1/2">
-            <FloatingCard
-              top="16%" right="6%" glow="#00D4FF" glowRgb="0,212,255" delay={0.9}
-              title="Platform Status" subtitle="All systems operational"
-              sparkData={[60, 75, 55, 85, 90, 80, 95, 88, 92, 96]}
-              icon={<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5a5 5 0 100 10 5 5 0 000-10zM6.5 3.5v3.2l1.8 1.3" stroke="#00D4FF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+          {/* RIGHT — floating metric cards */}
+          <div className="hidden md:block relative md:w-[48%]">
+            <MetricCard
+              top="14%" right="8%"
+              color="#00E5FF" colorRgb="0,229,255" delay={0.9}
+              label="Platform Health" value="99.9%" sub="All systems operational" live
+              bars={[55,70,60,80,88,76,92,85,90,96]}
             />
-
-            <FloatingCard
-              top="46%" right="4%" glow="#00FF88" glowRgb="0,255,136" delay={1.15}
-              title="AI Anomaly Detected" subtitle="Auto-remediated in 2.3s" alert={true}
-              sparkData={[30, 45, 38, 80, 20, 15, 10, 8, 5, 4]}
-              icon={<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1L1 11.5h11L6.5 1z" stroke="#00FF88" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.5 5v2.5M6.5 9v.5" stroke="#00FF88" strokeWidth="1.4" strokeLinecap="round" /></svg>}
+            <MetricCard
+              top="44%" right="5%"
+              color="#10B981" colorRgb="16,185,129" delay={1.1}
+              label="Auto-Remediated" value="2.3s" sub="Anomaly resolved · AI-driven" live
+              bars={[88,60,40,20,12,8,5,3,2,1]}
             />
-
-            <FloatingCard
-              bottom="20%" left="5%" glow="#7B2FFF" glowRgb="123,47,255" delay={1.4}
-              title="Deploy Pipeline" subtitle="Continuous delivery active"
-              sparkData={[40, 55, 48, 62, 70, 65, 78, 72, 85, 90]}
-              icon={<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 9.5l3-3 2 2 5-5" stroke="#7B2FFF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><path d="M8.5 3.5h3v3" stroke="#7B2FFF" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+            <MetricCard
+              bottom="18%" left="4%"
+              color="#1E7BC4" colorRgb="30,123,196" delay={1.35}
+              label="Deploy Pipeline" value="4m 22s" sub="Continuous delivery active"
+              bars={[38,50,44,60,68,62,75,70,84,88]}
             />
           </div>
         </div>
 
         {/* ── Tech ticker ── */}
-        <div className="relative z-10 overflow-hidden" style={{
-          borderTop: '1px solid var(--glass-border)',
-          background: 'rgba(0,0,0,0.25)',
-          height: '38px', display: 'flex', alignItems: 'center',
-        }}>
-          {/* Fade edges */}
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '80px', background: 'linear-gradient(to right, var(--bg-primary, #050810), transparent)', zIndex: 2, pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '80px', background: 'linear-gradient(to left, var(--bg-primary, #050810), transparent)', zIndex: 2, pointerEvents: 'none' }} />
-          <div style={{ display: 'flex', animation: 'tickerMove 36s linear infinite', whiteSpace: 'nowrap', willChange: 'transform' }}>
+        <div
+          className="relative z-10 overflow-hidden"
+          style={{
+            borderTop: '1px solid var(--glass-border)',
+            background: isDark ? 'rgba(5,15,31,0.65)' : 'rgba(232,234,245,0.88)',
+            height: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            backdropFilter: 'blur(8px)',
+          }}
+        >
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '100px', background: `linear-gradient(to right, var(--bg-primary), transparent)`, zIndex: 2, pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '100px', background: `linear-gradient(to left, var(--bg-primary), transparent)`, zIndex: 2, pointerEvents: 'none' }} />
+          <div style={{ display: 'flex', animation: 'tickerScroll 40s linear infinite', whiteSpace: 'nowrap', willChange: 'transform' }}>
             {[...TECH_TICKER, ...TECH_TICKER].map((tech, i) => (
               <span key={i} style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
-                padding: '0 20px', color: '#4A5568',
-                fontSize: '0.72rem', fontFamily: 'var(--font-body, Inter)',
-                letterSpacing: '0.06em', textTransform: 'uppercase',
+                padding: '0 22px',
+                color: 'var(--text-faint)',
+                fontSize: '0.7rem',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.07em',
+                textTransform: 'uppercase',
               }}>
-                <span style={{ display: 'inline-block', width: '3px', height: '3px', borderRadius: '50%', background: i % 3 === 0 ? '#00D4FF' : i % 3 === 1 ? '#7B2FFF' : '#00FF88', opacity: 0.6 }} />
+                <span style={{
+                  display: 'inline-block', width: '3px', height: '3px', borderRadius: '50%',
+                  background: i % 3 === 0 ? 'var(--accent-cyan)' : i % 3 === 1 ? 'var(--accent-blue)' : 'var(--accent-teal)',
+                  opacity: 0.7,
+                }} />
                 {tech}
               </span>
             ))}

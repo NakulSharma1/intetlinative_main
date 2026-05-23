@@ -1,194 +1,105 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { useTheme } from '../../context/ThemeContext';
 
-/* ─────────────────────────────────────────
-   Count-up animation component
-───────────────────────────────────────── */
-function CountUpAnimation({
-  end,
-  suffix = '',
-  prefix = '',
-}: {
-  end: number;
-  suffix?: string;
-  prefix?: string;
-}) {
+function CountUp({ end, suffix = '', prefix = '', isDark }: { end: number; suffix?: string; prefix?: string; isDark: boolean }) {
   const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [animated, setAnimated] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          const duration = 1800;
-          const steps = 72;
-          const increment = end / steps;
-          let current = 0;
-
-          const timer = setInterval(() => {
-            current += increment;
-            if (current >= end) {
-              setCount(end);
-              clearInterval(timer);
-            } else {
-              setCount(Math.floor(current));
-            }
-          }, duration / steps);
-
-          return () => clearInterval(timer);
-        }
-      },
-      { threshold: 0.4 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, hasAnimated]);
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !animated) {
+        setAnimated(true);
+        const dur = 1600, steps = 60, inc = end / steps;
+        let cur = 0;
+        const t = setInterval(() => {
+          cur += inc;
+          if (cur >= end) { setCount(end); clearInterval(t); }
+          else setCount(Math.floor(cur));
+        }, dur / steps);
+        return () => clearInterval(t);
+      }
+    }, { threshold: 0.4 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [end, animated]);
 
   return (
     <div ref={ref}>
-      <span
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '80px',
-          fontWeight: 800,
-          lineHeight: 1,
-          background: 'linear-gradient(135deg, #7B2FFF 0%, #00D4FF 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          display: 'inline-block',
-        }}
-      >
+      <span style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: '76px',
+        fontWeight: 800,
+        lineHeight: 1,
+        letterSpacing: '-0.04em',
+        background: isDark
+          ? 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)'
+          : 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        display: 'inline-block',
+      }}>
         {prefix}{count}{suffix}
       </span>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────
-   Inline SVG icons for feature cards
-───────────────────────────────────────── */
+// ─── Feature cards data ───────────────────────────────────────────────────────
 
-/* AWS + Azure + GCP logos combined */
-const CloudLogosIcon = () => (
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    {/* AWS - orange cloud shape */}
-    <path
-      d="M8 22c-3.3 0-6 2.7-6 6s2.7 6 6 6h10c3.3 0 6-2.7 6-6s-2.7-6-6-6c0-3.9-3.1-7-7-7S5 18.1 5 22"
-      stroke="#FF9900"
-      strokeWidth="1.3"
-      fill="rgba(255,153,0,0.1)"
-    />
-    <text x="8.5" y="32" fill="#FF9900" fontSize="6" fontWeight="700" fontFamily="sans-serif">AWS</text>
-
-    {/* Azure - blue diamond */}
-    <polygon
-      points="30,14 38,20 34,30 26,30"
-      stroke="#0078D4"
-      strokeWidth="1.3"
-      fill="rgba(0,120,212,0.1)"
-    />
-    <text x="27.5" y="39" fill="#0078D4" fontSize="5.5" fontWeight="700" fontFamily="sans-serif">Azure</text>
-
-    {/* GCP - colourful orb */}
-    <circle cx="44" cy="21" r="6" stroke="#4285F4" strokeWidth="1.3" fill="rgba(66,133,244,0.08)"/>
-    <path d="M41 21h6" stroke="#EA4335" strokeWidth="1.3" strokeLinecap="round"/>
-    <path d="M44 18v6" stroke="#34A853" strokeWidth="1.3" strokeLinecap="round"/>
-    <text x="39.5" y="33" fill="#4285F4" fontSize="5" fontWeight="700" fontFamily="sans-serif">GCP</text>
-
-    {/* Connecting arcs */}
-    <path d="M18 25 Q26 20 26 25" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="2 2" fill="none"/>
-    <path d="M38 25 Q38 25 38 25" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8" strokeDasharray="2 2" fill="none"/>
-  </svg>
-);
-
-/* Neural / brain SVG */
-const BrainIcon = () => (
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    {/* Nodes */}
-    {[
-      [26, 10], [14, 22], [38, 22], [10, 36], [26, 38], [42, 36],
-    ].map(([cx, cy], i) => (
-      <circle key={i} cx={cx} cy={cy} r="4" fill={i % 2 === 0 ? 'rgba(123,47,255,0.6)' : 'rgba(0,212,255,0.6)'} />
-    ))}
-    {/* Edges */}
-    {[
-      [26,10,14,22],[26,10,38,22],
-      [14,22,10,36],[14,22,26,38],
-      [38,22,26,38],[38,22,42,36],
-    ].map(([x1,y1,x2,y2], i) => (
-      <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(0,212,255,0.25)" strokeWidth="1"/>
-    ))}
-    {/* Pulse ring on centre node */}
-    <circle cx="26" cy="38" r="7" stroke="#00D4FF" strokeWidth="0.8" opacity="0.4">
-      <animate attributeName="r" values="7;12;7" dur="2.5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="26" cy="38" r="4" fill="#00D4FF" opacity="0.9"/>
-  </svg>
-);
-
-/* Shield SVG */
-const ShieldIcon = () => (
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <path
-      d="M26 6L8 13.5v14c0 11 8 21.5 18 24 10-2.5 18-13 18-24v-14L26 6z"
-      stroke="#00FF88"
-      strokeWidth="1.5"
-      fill="rgba(0,255,136,0.06)"
-    />
-    <path
-      d="M26 16L17 20v8c0 6 4 11.5 9 13 5-1.5 9-7 9-13v-8L26 16z"
-      stroke="#00FF88"
-      strokeWidth="1"
-      fill="rgba(0,255,136,0.04)"
-    />
-    <path
-      d="M21 28l3.5 3.5L31 23"
-      stroke="#00FF88"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-/* ─────────────────────────────────────────
-   Feature card data
-───────────────────────────────────────── */
 const featureCards = [
   {
-    Icon: CloudLogosIcon,
-    accentColor: '#00D4FF',
+    color: '#22D3EE',
+    colorRgb: '34,211,238',
     title: 'Multi-Cloud Ready',
-    description:
-      'Certified architects across AWS, Azure and GCP. Seamless workload portability, unified governance and cost-optimised multi-cloud deployments at enterprise scale.',
+    description: 'Certified architects across AWS, Azure and GCP. Seamless workload portability, unified governance and cost-optimised multi-cloud deployments at enterprise scale.',
     tags: ['AWS', 'Azure', 'GCP'],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M4 12a7 7 0 0 1 14 0" stroke="#22D3EE" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <path d="M18 12a4 4 0 0 1 8 0v1a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3v-1" stroke="#22D3EE" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        <line x1="14" y1="16" x2="14" y2="22" stroke="#22D3EE" strokeWidth="1.5" strokeLinecap="round"/>
+        <line x1="10" y1="22" x2="18" y2="22" stroke="#22D3EE" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
   },
   {
-    Icon: BrainIcon,
-    accentColor: '#7B2FFF',
+    color: '#1E7BC4',
+    colorRgb: '30,123,196',
     title: 'AI-Powered Ops',
-    description:
-      'ML-driven anomaly detection identifies incidents before they escalate. Auto-remediation playbooks resolve up to 80 % of routine alerts without human intervention.',
+    description: 'ML-driven anomaly detection identifies incidents before they escalate. Auto-remediation playbooks resolve up to 80% of routine alerts without human intervention.',
     tags: ['ML Ops', 'Auto-Heal', 'AIOps'],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <circle cx="14" cy="8" r="3" fill="#1E7BC4" opacity="0.85"/>
+        <circle cx="6" cy="18" r="3" fill="#1E7BC4" opacity="0.6"/>
+        <circle cx="22" cy="18" r="3" fill="#1E7BC4" opacity="0.6"/>
+        <circle cx="10" cy="24" r="2.5" fill="#00BCD4" opacity="0.5"/>
+        <circle cx="18" cy="24" r="2.5" fill="#00BCD4" opacity="0.5"/>
+        <line x1="14" y1="11" x2="6" y2="15" stroke="#1E7BC4" strokeWidth="1" opacity="0.4"/>
+        <line x1="14" y1="11" x2="22" y2="15" stroke="#1E7BC4" strokeWidth="1" opacity="0.4"/>
+        <line x1="6" y1="21" x2="10" y2="22" stroke="#00BCD4" strokeWidth="1" opacity="0.4"/>
+        <line x1="22" y1="21" x2="18" y2="22" stroke="#00BCD4" strokeWidth="1" opacity="0.4"/>
+      </svg>
+    ),
   },
   {
-    Icon: ShieldIcon,
-    accentColor: '#00FF88',
+    color: '#10B981',
+    colorRgb: '16,185,129',
     title: 'Security-First',
-    description:
-      'Zero-trust architecture by default. Shift-left SAST/DAST in every pipeline, runtime eBPF observability and cryptographic supply-chain attestation.',
+    description: 'Zero-trust architecture by default. Shift-left SAST/DAST in every pipeline, runtime eBPF observability and cryptographic supply-chain attestation.',
     tags: ['Zero Trust', 'Shift-Left', 'eBPF'],
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M14 3L4 7v8c0 6.6 4.4 12.8 10 14.2C20 27.8 24 21.6 24 15V7L14 3z" stroke="#10B981" strokeWidth="1.5" fill="rgba(16,185,129,0.08)" strokeLinejoin="round"/>
+        <path d="M9 14l3 3 7-7" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
   },
 ];
 
-/* ─────────────────────────────────────────
-   Stats data
-───────────────────────────────────────── */
 const stats = [
   { value: 50, suffix: '+', label: 'Enterprise Deployments' },
   { value: 99, suffix: '.9%', label: 'Uptime SLA' },
@@ -196,104 +107,103 @@ const stats = [
   { value: 3, suffix: '×', label: 'Delivery Speed' },
 ];
 
-/* ══════════════════════════════════════════════ */
 export default function StatsSection() {
+  const { isDark } = useTheme();
+
+  const cardBg = isDark ? 'rgba(17,24,39,0.70)' : '#FFFFFF';
+  const borderColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(79,70,229,0.10)';
+
   return (
-    <section className="relative py-20 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
-      {/* Subtle grid overlay */}
+    <section className="relative py-24 overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
+      {/* Grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+          backgroundImage: `linear-gradient(${isDark ? 'rgba(255,255,255,0.012)' : 'rgba(15,23,42,0.035)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(255,255,255,0.012)' : 'rgba(15,23,42,0.035)'} 1px, transparent 1px)`,
+          backgroundSize: '56px 56px',
         }}
       />
 
-      {/* Ambient glow blobs */}
-      <div
-        className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(123,47,255,0.07) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
+      {/* Ambient blobs */}
+      <div className="absolute top-0 right-0 w-[480px] h-[480px] rounded-full pointer-events-none" style={{ background: isDark ? 'radial-gradient(circle, rgba(0,188,212,0.07) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(79,70,229,0.08) 0%, transparent 70%)', filter: 'blur(80px)' }} />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none" style={{ background: isDark ? 'radial-gradient(circle, rgba(34,211,238,0.05) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)', filter: 'blur(80px)' }} />
 
       <div className="relative px-6 md:px-12">
-
-        {/* ── FEATURE CARDS ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Feature cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-20">
           {featureCards.map((card, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="group relative rounded-2xl border border-[color:var(--glass-border)] p-7 transition-all duration-300 cursor-default overflow-hidden"
-              style={{ background: 'var(--bg-secondary)' }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="group relative rounded-2xl overflow-hidden cursor-default"
+              style={{
+                background: cardBg,
+                border: `1px solid ${borderColor}`,
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: isDark
+                  ? '0 2px 12px rgba(0,0,0,0.3)'
+                  : '0 2px 12px rgba(15,23,42,0.05), 0 1px 3px rgba(15,23,42,0.04)',
+                transition: 'border-color 0.25s, box-shadow 0.25s',
+              }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = `${card.accentColor}44`;
-                el.style.background = `${card.accentColor}0a`;
-                el.style.boxShadow = `0 0 40px ${card.accentColor}18`;
+                el.style.borderColor = `rgba(${card.colorRgb},${isDark ? '0.35' : '0.28'})`;
+                el.style.boxShadow = isDark
+                  ? `0 0 32px rgba(${card.colorRgb},0.12), 0 8px 32px rgba(0,0,0,0.3)`
+                  : `0 8px 28px rgba(${card.colorRgb},0.12), 0 2px 8px rgba(15,23,42,0.06)`;
               }}
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement;
-                el.style.borderColor = 'var(--glass-border)';
-                el.style.background = 'var(--bg-secondary)';
-                el.style.boxShadow = 'none';
+                el.style.borderColor = borderColor;
+                el.style.boxShadow = isDark
+                  ? '0 2px 12px rgba(0,0,0,0.3)'
+                  : '0 2px 12px rgba(15,23,42,0.05), 0 1px 3px rgba(15,23,42,0.04)';
               }}
             >
-              {/* Top accent bar */}
+              {/* Accent bar */}
               <div
                 className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${card.accentColor}, transparent)`,
-                }}
+                style={{ background: `linear-gradient(90deg, ${card.color}, transparent 80%)` }}
               />
 
-              {/* Card layout: icon left + text right */}
-              <div className="flex items-start gap-5">
-                {/* Icon box */}
+              <div className="p-7 flex items-start gap-5">
+                {/* Icon */}
                 <div
-                  className="flex-shrink-0 w-[64px] h-[64px] rounded-2xl flex items-center justify-center"
+                  className="flex-shrink-0 w-[52px] h-[52px] rounded-xl flex items-center justify-center"
                   style={{
-                    background: `${card.accentColor}12`,
-                    border: `1px solid ${card.accentColor}28`,
+                    background: `rgba(${card.colorRgb},0.10)`,
+                    border: `1px solid rgba(${card.colorRgb},0.20)`,
                   }}
                 >
-                  <card.Icon />
+                  {card.icon}
                 </div>
 
                 {/* Text */}
                 <div className="flex-1 min-w-0">
                   <h3
-                    className="text-base font-bold text-[color:var(--text-primary)] mb-2"
-                    style={{ fontFamily: 'var(--font-display)' }}
+                    className="text-base font-semibold mb-2"
+                    style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}
                   >
                     {card.title}
                   </h3>
-                  <p className="text-sm text-[color:var(--text-muted)] leading-relaxed mb-4">{card.description}</p>
-
-                  {/* Tags */}
+                  <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-muted)' }}>
+                    {card.description}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {card.tags.map(tag => (
                       <span
                         key={tag}
-                        className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide"
+                        className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold"
                         style={{
-                          background: `${card.accentColor}12`,
-                          color: card.accentColor,
-                          border: `1px solid ${card.accentColor}28`,
+                          background: `rgba(${card.colorRgb},0.10)`,
+                          color: card.color,
+                          border: `1px solid rgba(${card.colorRgb},0.22)`,
                           fontFamily: 'var(--font-mono)',
+                          letterSpacing: '0.05em',
                         }}
                       >
                         {tag}
@@ -302,6 +212,28 @@ export default function StatsSection() {
                   </div>
                 </div>
               </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.09 }}
+              className="text-center"
+            >
+              <CountUp end={stat.value} suffix={stat.suffix} isDark={isDark} />
+              <p
+                className="text-sm mt-1.5"
+                style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-body)' }}
+              >
+                {stat.label}
+              </p>
             </motion.div>
           ))}
         </div>

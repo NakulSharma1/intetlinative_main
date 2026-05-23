@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CloudUpload, GitBranch, ShieldCheck, RotateCw, Brain, Cpu, Server, Cloud, Check, ArrowRight, ChevronDown } from 'lucide-react';
 import PageHero from '../components/PageHero';
+import { useTheme } from '../../context/ThemeContext';
 
 const services = [
   {
@@ -9,8 +10,8 @@ const services = [
     title: 'Cloud-Native Architecture',
     tagline: 'Built for scale, designed for resilience',
     description: 'Transform your infrastructure with Kubernetes-native platforms engineered for multi-cloud environments, automatic scaling, and cost optimization.',
-    color: '#00D4FF',
-    colorRgb: '0,212,255',
+    color: '#00BCD4',
+    colorRgb: '0,188,212',
     details: [
       'Multi-cloud strategy and architecture design',
       'Kubernetes platform setup and optimization',
@@ -32,8 +33,8 @@ const services = [
     title: 'Platform Engineering',
     tagline: 'Developer productivity at enterprise scale',
     description: 'Build Internal Developer Platforms that provide golden paths, self-service infrastructure, and accelerate time-to-production.',
-    color: '#7B2FFF',
-    colorRgb: '123,47,255',
+    color: '#1E7BC4',
+    colorRgb: '30,123,196',
     details: [
       'Internal Developer Platform (IDP) design and implementation',
       'Self-service infrastructure provisioning',
@@ -55,8 +56,8 @@ const services = [
     title: 'Security & Observability',
     tagline: 'See everything, protect everything',
     description: 'Comprehensive security posture with full-stack observability, threat detection, and automated incident response powered by AI.',
-    color: '#00C96B',
-    colorRgb: '0,201,107',
+    color: '#10B981',
+    colorRgb: '16,185,129',
     details: [
       'Zero-trust security architecture',
       'Runtime security with Falco and eBPF',
@@ -78,8 +79,8 @@ const services = [
     title: 'Application Modernization',
     tagline: 'Legacy to cloud-native, seamlessly',
     description: 'Modernize monolithic applications into cloud-native microservices with zero-downtime migration strategies.',
-    color: '#FF9D00',
-    colorRgb: '255,157,0',
+    color: '#F59E0B',
+    colorRgb: '245,158,11',
     details: [
       'Strangler pattern migration strategies',
       'Monolith to microservices decomposition',
@@ -101,8 +102,8 @@ const services = [
     title: 'AI-Driven AIOps',
     tagline: 'Intelligence that never sleeps',
     description: 'Leverage machine learning and AI to automate operations, predict failures, and optimize infrastructure performance continuously.',
-    color: '#FF2E88',
-    colorRgb: '255,46,136',
+    color: '#0EA5E9',
+    colorRgb: '14,165,233',
     details: [
       'Anomaly detection and predictive analytics',
       'Automated incident response and remediation',
@@ -124,8 +125,8 @@ const services = [
     title: 'OT Observability',
     tagline: 'Edge to cloud visibility',
     description: 'Monitor and optimize operational technology, IoT devices, and edge infrastructure with real-time analytics and predictive intelligence.',
-    color: '#00C9B1',
-    colorRgb: '0,201,177',
+    color: '#14B8A6',
+    colorRgb: '20,184,166',
     details: [
       'Edge computing platform design',
       'IoT device management and monitoring',
@@ -147,8 +148,8 @@ const services = [
     title: 'Red Hat OpenShift',
     tagline: 'Enterprise Kubernetes on any cloud',
     description: 'Deploy and manage enterprise-grade Kubernetes with Red Hat OpenShift — a consistent, secure hybrid cloud platform from bare metal to multi-cloud.',
-    color: '#EE0000',
-    colorRgb: '238,0,0',
+    color: '#6366F1',
+    colorRgb: '99,102,241',
     details: [
       'OpenShift cluster deployment and lifecycle management',
       'RHEL and CoreOS hardened node configuration',
@@ -170,8 +171,8 @@ const services = [
     title: 'AWS Managed Services',
     tagline: 'Fully managed cloud ops at scale',
     description: 'End-to-end management of your AWS environment — from architecture and cost optimisation to 24/7 operations, security compliance, and continuous improvement.',
-    color: '#FF9900',
-    colorRgb: '255,153,0',
+    color: '#F59E0B',
+    colorRgb: '245,158,11',
     details: [
       'AWS account governance, landing zones, and Control Tower',
       'EKS cluster management and Fargate workload optimisation',
@@ -192,6 +193,7 @@ const services = [
 
 function ServiceCard({ service, index }: { service: typeof services[number]; index: number }) {
   const [expanded, setExpanded] = useState(false);
+  const { isDark } = useTheme();
 
   return (
     <motion.div
@@ -201,65 +203,121 @@ function ServiceCard({ service, index }: { service: typeof services[number]; ind
       transition={{ duration: 0.5, delay: (index % 2) * 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="group relative flex flex-col rounded-2xl overflow-hidden"
       style={{
-        background: 'var(--bg-secondary)',
-        border: '1px solid var(--glass-border)',
-        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        background: isDark ? 'var(--bg-secondary)' : '#ffffff',
+        border: isDark ? '1px solid var(--glass-border)' : '1px solid rgba(99,120,180,0.14)',
+        boxShadow: isDark ? 'none' : '0 2px 12px rgba(60,80,160,0.07), 0 1px 3px rgba(60,80,160,0.04)',
+        transition: 'border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease',
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = `rgba(${service.colorRgb},0.45)`;
-        el.style.boxShadow = `0 0 40px rgba(${service.colorRgb},0.10), 0 8px 32px rgba(0,0,0,0.12)`;
+        el.style.borderColor = `rgba(${service.colorRgb},${isDark ? '0.45' : '0.5'})`;
+        el.style.boxShadow = isDark
+          ? `0 0 40px rgba(${service.colorRgb},0.10), 0 8px 32px rgba(0,0,0,0.12)`
+          : `0 8px 32px rgba(${service.colorRgb},0.14), 0 2px 8px rgba(60,80,160,0.08), 0 0 0 1px rgba(${service.colorRgb},0.15)`;
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = 'var(--glass-border)';
-        el.style.boxShadow = 'none';
+        el.style.borderColor = isDark ? 'var(--glass-border)' : 'rgba(99,120,180,0.14)';
+        el.style.boxShadow = isDark ? 'none' : '0 2px 12px rgba(60,80,160,0.07), 0 1px 3px rgba(60,80,160,0.04)';
       }}
     >
-      {/* Colored top bar */}
-      <div className="h-1 w-full flex-shrink-0" style={{ background: service.color }} />
+      {/* Colored top bar — thicker & gradient for light */}
+      <div
+        className="h-[3px] w-full flex-shrink-0"
+        style={{
+          background: isDark
+            ? service.color
+            : `linear-gradient(90deg, ${service.color} 0%, rgba(${service.colorRgb},0.5) 100%)`,
+        }}
+      />
 
-      <div className="flex flex-col flex-1 p-7 gap-5">
-
-        {/* Header */}
-        <div className="flex items-start gap-4">
-          <div
-            className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
-            style={{
-              background: `rgba(${service.colorRgb},0.12)`,
-              border: `1px solid rgba(${service.colorRgb},0.2)`,
-            }}
-          >
-            <service.icon size={26} style={{ color: service.color }} />
-          </div>
-          <div className="flex-1 min-w-0 pt-0.5">
-            <h3
-              className="font-bold leading-tight mb-1"
+      {/* Light-mode: subtle colored header wash */}
+      {!isDark && (
+        <div
+          className="px-7 pt-6 pb-4"
+          style={{
+            background: `linear-gradient(160deg, rgba(${service.colorRgb},0.06) 0%, rgba(${service.colorRgb},0.02) 60%, transparent 100%)`,
+          }}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
               style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: '18px',
-                color: 'var(--text-primary)',
+                background: `rgba(${service.colorRgb},0.10)`,
+                border: `1.5px solid rgba(${service.colorRgb},0.22)`,
+                boxShadow: `0 2px 12px rgba(${service.colorRgb},0.15)`,
               }}
             >
-              {service.title}
-            </h3>
-            <p className="text-sm font-medium" style={{ color: service.color }}>
-              {service.tagline}
-            </p>
+              <service.icon size={26} style={{ color: service.color }} />
+            </div>
+            <div className="flex-1 min-w-0 pt-0.5">
+              <h3
+                className="font-bold leading-tight mb-1"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '18px',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                {service.title}
+              </h3>
+              <p className="text-sm font-semibold" style={{ color: service.color }}>
+                {service.tagline}
+              </p>
+            </div>
           </div>
         </div>
+      )}
+
+      <div className={`flex flex-col flex-1 gap-5 ${isDark ? 'p-7' : 'px-7 pb-7'}`}>
+
+        {/* Header — dark only (light header rendered above) */}
+        {isDark && (
+          <div className="flex items-start gap-4">
+            <div
+              className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{
+                background: `rgba(${service.colorRgb},0.12)`,
+                border: `1px solid rgba(${service.colorRgb},0.2)`,
+              }}
+            >
+              <service.icon size={26} style={{ color: service.color }} />
+            </div>
+            <div className="flex-1 min-w-0 pt-0.5">
+              <h3
+                className="font-bold leading-tight mb-1"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '18px',
+                  color: 'var(--text-primary)',
+                }}
+              >
+                {service.title}
+              </h3>
+              <p className="text-sm font-medium" style={{ color: service.color }}>
+                {service.tagline}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Description */}
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+        <p
+          className="text-sm leading-relaxed"
+          style={{ color: 'var(--text-secondary)', marginTop: isDark ? 0 : '-4px' }}
+        >
           {service.description}
         </p>
 
-        {/* Deliverables — always visible, first 4; rest expand */}
+        {/* Deliverables */}
         <div
           className="rounded-xl p-4"
-          style={{
+          style={isDark ? {
             background: 'var(--bg-tertiary)',
             border: '1px solid var(--glass-border)',
+          } : {
+            background: `rgba(${service.colorRgb},0.04)`,
+            border: `1px solid rgba(${service.colorRgb},0.12)`,
           }}
         >
           <p
@@ -311,9 +369,12 @@ function ServiceCard({ service, index }: { service: typeof services[number]; ind
         {/* Success Stories */}
         <div
           className="rounded-xl p-4"
-          style={{
+          style={isDark ? {
             background: `rgba(${service.colorRgb},0.06)`,
             border: `1px solid rgba(${service.colorRgb},0.18)`,
+          } : {
+            background: `rgba(${service.colorRgb},0.05)`,
+            border: `1px solid rgba(${service.colorRgb},0.15)`,
           }}
         >
           <p
@@ -339,21 +400,37 @@ function ServiceCard({ service, index }: { service: typeof services[number]; ind
         <div className="mt-auto pt-1">
           <button
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200"
-            style={{
+            style={isDark ? {
               border: `1.5px solid rgba(${service.colorRgb},0.4)`,
               color: service.color,
               background: `rgba(${service.colorRgb},0.08)`,
               fontFamily: 'var(--font-display)',
+            } : {
+              border: `1.5px solid rgba(${service.colorRgb},0.45)`,
+              color: '#ffffff',
+              background: service.color,
+              fontFamily: 'var(--font-display)',
+              boxShadow: `0 2px 12px rgba(${service.colorRgb},0.30)`,
             }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = `rgba(${service.colorRgb},0.18)`;
-              el.style.borderColor = `rgba(${service.colorRgb},0.7)`;
+              if (isDark) {
+                el.style.background = `rgba(${service.colorRgb},0.18)`;
+                el.style.borderColor = `rgba(${service.colorRgb},0.7)`;
+              } else {
+                el.style.opacity = '0.9';
+                el.style.boxShadow = `0 4px 20px rgba(${service.colorRgb},0.45)`;
+              }
             }}
             onMouseLeave={e => {
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = `rgba(${service.colorRgb},0.08)`;
-              el.style.borderColor = `rgba(${service.colorRgb},0.4)`;
+              if (isDark) {
+                el.style.background = `rgba(${service.colorRgb},0.08)`;
+                el.style.borderColor = `rgba(${service.colorRgb},0.4)`;
+              } else {
+                el.style.opacity = '1';
+                el.style.boxShadow = `0 2px 12px rgba(${service.colorRgb},0.30)`;
+              }
             }}
           >
             Get Started <ArrowRight size={14} />
@@ -361,16 +438,22 @@ function ServiceCard({ service, index }: { service: typeof services[number]; ind
         </div>
       </div>
 
-      {/* Corner glow on hover */}
+      {/* Corner accent on hover */}
       <div
         className="pointer-events-none absolute bottom-0 right-0 w-36 h-36 rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: `radial-gradient(circle at bottom right, rgba(${service.colorRgb},0.10), transparent 70%)` }}
+        style={{
+          background: isDark
+            ? `radial-gradient(circle at bottom right, rgba(${service.colorRgb},0.10), transparent 70%)`
+            : `radial-gradient(circle at bottom right, rgba(${service.colorRgb},0.07), transparent 70%)`,
+        }}
       />
     </motion.div>
   );
 }
 
 export default function Services() {
+  const { isDark } = useTheme();
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
       <PageHero
@@ -379,7 +462,7 @@ export default function Services() {
         headlineGradient="end to end."
         subtext="From cloud-native architecture to AI-driven operations — every capability your enterprise needs to scale with confidence."
         variant="services"
-        badgeColor="#7B2FFF"
+        badgeColor="#1E7BC4"
       />
 
       {/* Grid */}
@@ -395,8 +478,11 @@ export default function Services() {
 
       {/* CTA */}
       <section
-        className="py-20 border-t"
-        style={{ borderColor: 'var(--glass-border)' }}
+        className="py-20"
+        style={{
+          borderTop: '1px solid var(--glass-border)',
+          background: isDark ? 'transparent' : 'linear-gradient(160deg, rgba(124,58,237,0.04) 0%, rgba(168,85,247,0.03) 100%)',
+        }}
       >
         <div className="px-6 md:px-12 text-center">
           <motion.div
@@ -407,13 +493,16 @@ export default function Services() {
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase mb-6"
               style={{
-                background: 'rgba(123,47,255,0.08)',
-                border: '1px solid rgba(123,47,255,0.25)',
-                color: '#7B2FFF',
+                background: isDark ? 'rgba(0,188,212,0.08)' : 'rgba(0,184,207,0.07)',
+                border: isDark ? '1px solid rgba(0,188,212,0.25)' : '1px solid rgba(0,184,207,0.22)',
+                color: isDark ? '#00BCD4' : '#008FA8',
                 fontFamily: 'var(--font-display)',
               }}
             >
-              <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#7B2FFF' }} />
+              <span
+                className="w-1.5 h-1.5 rounded-full inline-block"
+                style={{ background: isDark ? '#00BCD4' : '#008FA8' }}
+              />
               Let's Build Together
             </div>
 
@@ -436,10 +525,12 @@ export default function Services() {
             <button
               className="inline-flex items-center gap-3 px-10 py-4 rounded-full font-bold text-base transition-all hover:scale-[1.03] active:scale-[0.98]"
               style={{
-                background: 'linear-gradient(135deg, #7B2FFF 0%, #00D4FF 100%)',
-                color: '#fff',
+                background: 'linear-gradient(135deg, #00C8E6 0%, #1E7BC4 100%)',
+                color: '#050F1F',
                 fontFamily: 'var(--font-display)',
-                boxShadow: '0 0 36px rgba(123,47,255,0.28), 0 4px 28px rgba(0,212,255,0.18)',
+                boxShadow: isDark
+                  ? '0 0 36px rgba(0,200,230,0.28)'
+                  : '0 4px 24px rgba(0,200,230,0.28)',
               }}
             >
               Schedule a Consultation
